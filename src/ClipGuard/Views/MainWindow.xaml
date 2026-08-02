@@ -1,5 +1,5 @@
 <!--
-  Consumer main window — mock 5a, with tab content from 3a.
+  Consumer main window.
   880x560, custom 40px title bar, 200px sidebar.
 -->
 <Window x:Class="ClipGuard.Views.MainWindow"

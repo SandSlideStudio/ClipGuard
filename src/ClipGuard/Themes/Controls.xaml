@@ -1,6 +1,6 @@
 <!--
   Shared control styles. Geometry (radii, padding, sizes) mirrors the
-  handoff mocks exactly; every colour comes from Tokens.xaml.
+  original designs exactly; every colour comes from Tokens.xaml.
 -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

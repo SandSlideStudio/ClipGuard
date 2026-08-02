@@ -9,7 +9,7 @@ public enum ClipboardAction
 }
 
 /// <summary>
-/// Why an event was interesting. Mirrors the categories shown in the mocks'
+/// Why an event was interesting. Mirrors the categories shown in the
 /// event log, mapped onto what a desktop-side monitor can actually determine.
 /// </summary>
 public enum EventCategory

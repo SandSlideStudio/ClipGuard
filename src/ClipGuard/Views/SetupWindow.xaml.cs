@@ -6,7 +6,7 @@ using ClipGuard.Services;
 namespace ClipGuard.Views;
 
 /// <summary>
-/// The four-step first-run wizard from mock 2a. Step 2 gates "I agree" on the
+/// The four-step first-run wizard. Step 2 gates "I agree" on the
 /// acceptance checkbox; step 4's body summarises whatever was chosen on step 3.
 /// </summary>
 public partial class SetupWindow : Window

@@ -7,7 +7,7 @@ using ClipGuard.Services;
 namespace ClipGuard.Views;
 
 /// <summary>
-/// One toast. The layouts from mock 5c live in the same window and are selected
+/// One toast. The three layouts live in the same window and are selected
 /// by severity, plus two warning variants for content that arrived dangerous
 /// rather than swapped. Only the informational and blocked toasts auto-dismiss.
 /// </summary>

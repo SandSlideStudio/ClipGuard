@@ -1,5 +1,5 @@
 <!--
-  Modernist design tokens, ported 1:1 from the handoff's styles.css.
+  Modernist design tokens.
   Colour literals live here and nowhere else; every style and view
   references these keys by name.
 -->

@@ -64,5 +64,3 @@ is removed with it.
 Third-party components carry their own licences — see
 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). Archivo is used under the SIL
 Open Font License and its terms are not affected by anything above.
-
-*Not legal advice. Have a solicitor review this before commercial release.*

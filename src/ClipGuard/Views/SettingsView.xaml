@@ -1,4 +1,4 @@
-<!-- Settings tab — mock 3a: toggle rows in rounded panels + the auto-clear segmented control. -->
+<!-- Settings tab: toggle rows in rounded panels + the auto-clear segmented control. -->
 <UserControl x:Class="ClipGuard.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

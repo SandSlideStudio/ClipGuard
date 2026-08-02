@@ -1,5 +1,5 @@
 <!--
-  App rules tab — mock 3a's "Site rules". With process-level attribution the
+  App rules tab. With process-level attribution the
   unit is an executable, so rows show `chrome.exe` rather than `site.tld`.
 -->
 <UserControl x:Class="ClipGuard.Views.AppRulesView"

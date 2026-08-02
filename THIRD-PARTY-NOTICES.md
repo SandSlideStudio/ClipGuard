@@ -31,7 +31,7 @@ files, you must rename them.
 - **Used for:** icon geometry
 
 No Lucide files are distributed. The path data in `Themes/Icons.xaml` was
-redrawn by hand from Lucide's shapes, matching the design handoff.
+redrawn by hand from Lucide's shapes.
 
 ---
 

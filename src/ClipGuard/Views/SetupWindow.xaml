@@ -1,5 +1,5 @@
 <!--
-  First-run setup wizard — mock 2a. 600px, four steps:
+  First-run setup wizard. 600px, four steps:
   welcome, terms, preferences, done.
 -->
 <Window x:Class="ClipGuard.Views.SetupWindow"

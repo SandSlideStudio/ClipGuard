@@ -1,5 +1,5 @@
 <!--
-  Notification ladder — mock 5c. One window, three layouts chosen by severity:
+  Notification ladder. One window, three layouts chosen by severity:
   small pill (allowed), medium card (blocked), large sticky card (high risk).
 -->
 <Window x:Class="ClipGuard.Views.NotificationWindow"

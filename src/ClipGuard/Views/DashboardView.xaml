@@ -1,4 +1,4 @@
-<!-- Dashboard tab — mock 3a/5a: stat cards, actions, latest events. -->
+<!-- Dashboard tab: stat cards, actions, latest events. -->
 <UserControl x:Class="ClipGuard.Views.DashboardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
