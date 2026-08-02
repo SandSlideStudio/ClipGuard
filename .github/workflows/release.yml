@@ -35,6 +35,7 @@ jobs:
         run: ./build/publish.ps1
 
       - name: Check the version matches the tag
+        id: version
         shell: pwsh
         run: |
           $tag = if ('${{ github.event_name }}' -eq 'workflow_dispatch') {
@@ -42,13 +43,21 @@ jobs:
           } else {
             '${{ github.ref_name }}'
           }
-          $expected = $tag.TrimStart('v')
+
+          # A pre-release suffix (v1.0.0-rc.1) is not part of the assembly
+          # version, so compare only the numeric part.
+          $expected = $tag.TrimStart('v').Split('-')[0]
+          $prerelease = $tag.Contains('-')
+
           $csproj = Get-Content ./src/ClipGuard/ClipGuard.csproj -Raw
           $actual = [regex]::Match($csproj, '<Version>([^<]+)</Version>').Groups[1].Value
+
           if ($actual -ne $expected) {
             throw "Tag $tag expects version $expected but the project says $actual."
           }
-          Write-Host "Version $actual matches tag $tag"
+
+          "prerelease=$($prerelease.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          Write-Host "Version $actual matches tag $tag (prerelease: $prerelease)"
 
       - name: Checksums
         shell: pwsh
@@ -69,6 +78,9 @@ jobs:
             dist/win-x64/ClipGuard.exe
             dist/SHA256SUMS.txt
           generate_release_notes: true
+          # Any tag carrying a suffix is published without the "Latest release"
+          # badge, so an untried build never presents itself as the stable one.
+          prerelease: ${{ steps.version.outputs.prerelease }}
           body: |
             ## Verifying this download
 
