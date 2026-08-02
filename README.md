@@ -255,10 +255,20 @@ was meant to catch. The old `"$m = …"` template fails that harness with the ex
 Tests redirect `Storage.Root` via `CLIPGUARD_DATA_DIR` in a module initialiser,
 so they never read or overwrite a real install's history.
 
-**Still untested:** the `ProtectionService` decision matrix — the heart of the
-product. It needs the swap/warn/defuse decision extracted into a pure function
-before it can be covered, since today it's entangled with clipboard access and
-dispatcher timers. That extraction is the highest-value next piece of work.
+`DetectionPolicyTests` covers the swap/warn/defuse matrix. The decision lives in
+`DetectionPolicy.Evaluate` as a pure function precisely so it can be tested —
+in `ProtectionService` it was entangled with clipboard access, dispatcher timers
+and persistence, and had no coverage at all.
+
+Two things worth knowing about that suite:
+
+- `A_slow_swap_slips_through` and
+  `A_background_app_overwriting_a_fresh_copy_is_blocked_whatever_it_wrote`
+  assert *limitations*, not features. They exist so the trade-offs are visible
+  and a future change to `SwapWindow` fails loudly rather than quietly.
+- `HighRiskSwap` and `HighRisk` are deliberately separate. A ClickFix lure is
+  high risk but nothing was swapped, so it must not render the before/after
+  card — that would invent a comparison that never happened.
 
 ## Packaging and signing
 
