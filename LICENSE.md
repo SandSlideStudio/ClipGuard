@@ -19,7 +19,7 @@ clipboard — but it is not licensed for reuse.
 - Sell, sublicense or rent it
 - Remove or alter copyright and licence notices
 
-For any other use, ask: **hello@sandslide.studio**
+For any other use, open an issue on this repository to ask.
 
 ---
 
