@@ -20,8 +20,13 @@
   <Grid Margin="12">
 
     <!-- ══ Small — allowed events, one line, auto-dismiss ═══════════════ -->
+    <!-- The mock drew this as a full stadium (radius 99). Kept the app's card
+         radius instead so all three toasts, and the windows behind them, share
+         one corner. At ~40px tall a 14px radius reads proportionally rounder
+         here than on the taller cards, which gives the small-size softening
+         without inventing a second shape language. -->
     <Border x:Name="SmallCard" Visibility="Collapsed"
-            Background="{StaticResource Bg}" CornerRadius="99"
+            Background="{StaticResource Bg}" CornerRadius="14"
             BorderBrush="#1f000000" BorderThickness="1"
             HorizontalAlignment="Right" MaxWidth="380"
             Effect="{StaticResource ShadowPill}">
