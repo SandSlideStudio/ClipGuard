@@ -53,6 +53,24 @@ if ($LASTEXITCODE -ne 0) { throw 'Publish failed.' }
 $exe = Join-Path $output 'ClipGuard.exe'
 $size = [math]::Round((Get-Item $exe).Length / 1MB, 1)
 
+# The licence for the embedded Archivo font has to travel with the binary, so
+# the distributable is a zip rather than a bare exe. Shipping the exe on its own
+# would leave THIRD-PARTY-LICENSES behind and breach the OFL.
+Copy-Item (Join-Path $PSScriptRoot '../LICENSE.md') $output -Force
+Copy-Item (Join-Path $PSScriptRoot '../THIRD-PARTY-NOTICES.md') $output -Force
+
+$csproj = Get-Content (Join-Path $PSScriptRoot '../src/ClipGuard/ClipGuard.csproj') -Raw
+$version = [regex]::Match($csproj, '<Version>([^<]+)</Version>').Groups[1].Value
+
+$zip = Join-Path $OutDir "ClipGuard-$version-$Runtime.zip"
+if (Test-Path $zip) { Remove-Item $zip -Force }
+Compress-Archive -Path (Join-Path $output '*') -DestinationPath $zip
+
+$hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+"$hash  $(Split-Path $zip -Leaf)" | Out-File (Join-Path $OutDir 'SHA256SUMS.txt') -Encoding ascii
+
 Write-Host ''
 Write-Host "Published: $exe ($size MB)" -ForegroundColor Green
+Write-Host "Package  : $zip" -ForegroundColor Green
+Write-Host "SHA-256  : $hash"
 Write-Host 'Unsigned - see README.md before distributing.' -ForegroundColor Yellow

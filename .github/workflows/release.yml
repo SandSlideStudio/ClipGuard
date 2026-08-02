@@ -59,23 +59,22 @@ jobs:
           "prerelease=$($prerelease.ToString().ToLower())" >> $env:GITHUB_OUTPUT
           Write-Host "Version $actual matches tag $tag (prerelease: $prerelease)"
 
-      - name: Checksums
-        shell: pwsh
-        run: |
-          $exe = './dist/win-x64/ClipGuard.exe'
-          $hash = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLower()
-          "$hash  ClipGuard.exe" | Out-File ./dist/SHA256SUMS.txt -Encoding ascii
-          Write-Host "SHA-256: $hash"
+      # publish.ps1 already produced the zip and SHA256SUMS.txt, so local builds
+      # and released builds are packaged identically.
 
       - uses: actions/attest-build-provenance@v2
         with:
-          subject-path: ./dist/win-x64/ClipGuard.exe
+          # Both, so verification works whether someone checks the download or
+          # the executable they extracted from it.
+          subject-path: |
+            ./dist/*.zip
+            ./dist/win-x64/ClipGuard.exe
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/win-x64/ClipGuard.exe
+            dist/*.zip
             dist/SHA256SUMS.txt
           generate_release_notes: true
           # Any tag carrying a suffix is published without the "Latest release"
@@ -88,14 +87,14 @@ jobs:
             run. Signing certificates cost money this project doesn't make.
             Verify the download instead:
 
-            **Checksum** compare against `SHA256SUMS.txt`:
+            **Checksum** compare the zip against `SHA256SUMS.txt`:
             ```powershell
-            Get-FileHash ClipGuard.exe -Algorithm SHA256
+            Get-FileHash ClipGuard-*.zip -Algorithm SHA256
             ```
 
             **Provenance** confirm it was built by this repo, from this commit:
             ```bash
-            gh attestation verify ClipGuard.exe --repo ${{ github.repository }}
+            gh attestation verify ClipGuard-*.zip --repo ${{ github.repository }}
             ```
 
             That proves the binary came from the source you can read here, which
