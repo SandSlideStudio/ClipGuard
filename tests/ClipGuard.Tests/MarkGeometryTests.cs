@@ -68,6 +68,33 @@ public class MarkGeometryTests
     }
 
     [Fact]
+    public void Simple_clip_keeps_a_wider_gap_than_the_full_one()
+    {
+        // The whole reason it exists: at 16px the full clip's gaps fall under a
+        // pixel. Two wires 4.4 apart survive where three at 2.6 don't.
+        const double simpleSpacing = 4.4;
+
+        Assert.True(MarkGeometry.SimpleClipStrokeWidth < simpleSpacing / 2);
+    }
+
+    [Fact]
+    public void Simple_clip_also_sits_inside_the_shield() =>
+        Assert.True(MarkGeometry.Shield.Bounds.Contains(MarkGeometry.SimpleClip.Bounds));
+
+    [Fact]
+    public void Both_marks_still_have_holes_cut_in_them()
+    {
+        foreach (var simplified in new[] { false, true })
+        {
+            var mark = MarkGeometry.BuildSolidMark(simplified);
+
+            Assert.False(mark.IsEmpty());
+            Assert.True(GetArea(mark) < GetArea(MarkGeometry.Shield),
+                $"simplified={simplified} produced no knockout");
+        }
+    }
+
+    [Fact]
     public void Threat_starts_outside_the_shield()
     {
         // It flies in from off to the right; overlapping at rest would put a red

@@ -58,7 +58,11 @@ public sealed class NotificationService
             var dpi = VisualTreeHelper.GetDpi(window);
             var height = window.ActualHeight > 0 ? window.ActualHeight : window.DesiredSize.Height;
 
-            window.Left = (work.Right / dpi.DpiScaleX) - window.Width;
+            // Measured width, not the declared one: with SizeToContent the pill
+            // is narrower than the cards, and window.Width reads NaN.
+            var width = window.ActualWidth > 0 ? window.ActualWidth : window.DesiredSize.Width;
+
+            window.Left = (work.Right / dpi.DpiScaleX) - width;
             window.Top = (work.Bottom / dpi.DpiScaleY) - height - offset;
 
             offset += height + Gap;

@@ -53,7 +53,27 @@ public partial class ClipGuardMark : UserControl
         set => SetValue(IsAnimatingProperty, value);
     }
 
-    public ClipGuardMark() => InitializeComponent();
+    public ClipGuardMark()
+    {
+        InitializeComponent();
+        SizeChanged += (_, _) => PickClipForSize();
+    }
+
+    /// <summary>
+    /// Swaps to the two-wire clip once the mark is small enough that the full
+    /// one would close up. Driven by measured size rather than a flag, so every
+    /// caller gets the legible version automatically.
+    /// </summary>
+    private void PickClipForSize()
+    {
+        var extent = Math.Min(ActualWidth, ActualHeight);
+        if (extent <= 0) return;
+
+        var simplify = extent < MarkGeometry.SimplifyBelow;
+
+        FullClip.Visibility = simplify ? Visibility.Collapsed : Visibility.Visible;
+        SimpleClip.Visibility = simplify ? Visibility.Visible : Visibility.Collapsed;
+    }
 
     private static void OnIsAnimatingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

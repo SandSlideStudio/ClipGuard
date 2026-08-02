@@ -32,33 +32,48 @@ function Get-Constant([string]$name) {
     return $match.Groups[1].Value
 }
 
-$shieldPath = Get-Constant 'ShieldPath'
-$clipPath   = Get-Constant 'ClipPath'
+function Get-Number([string]$name) {
+    $match = [regex]::Match($source, "public const double $name\s*=\s*([\d.]+)")
+    if (-not $match.Success) { throw "Could not find $name in $GeometrySource" }
+    return [double]$match.Groups[1].Value
+}
 
-$strokeMatch = [regex]::Match($source, 'public const double ClipStrokeWidth\s*=\s*([\d.]+)')
-if (-not $strokeMatch.Success) { throw 'Could not find ClipStrokeWidth' }
-$strokeWidth = [double]$strokeMatch.Groups[1].Value
+$shieldPath     = Get-Constant 'ShieldPath'
+$clipPath       = Get-Constant 'ClipPath'
+$simpleClipPath = Get-Constant 'SimpleClipPath'
 
-$extentMatch = [regex]::Match($source, 'public const double Extent\s*=\s*([\d.]+)')
-$extent = [double]$extentMatch.Groups[1].Value
+$strokeWidth       = Get-Number 'ClipStrokeWidth'
+$simpleStrokeWidth = Get-Number 'SimpleClipStrokeWidth'
+$simplifyBelow     = Get-Number 'SimplifyBelow'
+$extent            = Get-Number 'Extent'
 
 Write-Host "Mark geometry read from $(Split-Path $GeometrySource -Leaf)" -ForegroundColor Cyan
 
-# ── Subtract the clip from the shield, once ───────────────────────────────
+# ── Subtract the clip from the shield ─────────────────────────────────────
+# Two marks: below SimplifyBelow the three-wire clip's gaps drop under a pixel
+# and close into a smudge, so those frames get the two-wire version. Same rule
+# the WPF control applies at runtime.
 $shield = [System.Windows.Media.Geometry]::Parse($shieldPath)
-$clip   = [System.Windows.Media.Geometry]::Parse($clipPath)
 
-$pen = New-Object System.Windows.Media.Pen(
-    [System.Windows.Media.Brushes]::Black, $strokeWidth)
-$pen.StartLineCap = [System.Windows.Media.PenLineCap]::Round
-$pen.EndLineCap   = [System.Windows.Media.PenLineCap]::Round
-$pen.LineJoin     = [System.Windows.Media.PenLineJoin]::Round
+function New-SolidMark([string]$path, [double]$width) {
+    $clip = [System.Windows.Media.Geometry]::Parse($path)
 
-# Widen the stroked clip into a fillable outline so it can be cut out. The hole
-# stays transparent, which is what lets one icon work on light and dark shells.
-$clipOutline = $clip.GetWidenedPathGeometry($pen)
-$mark = [System.Windows.Media.Geometry]::Combine(
-    $shield, $clipOutline, [System.Windows.Media.GeometryCombineMode]::Exclude, $null)
+    $pen = New-Object System.Windows.Media.Pen(
+        [System.Windows.Media.Brushes]::Black, $width)
+    $pen.StartLineCap = [System.Windows.Media.PenLineCap]::Round
+    $pen.EndLineCap   = [System.Windows.Media.PenLineCap]::Round
+    $pen.LineJoin     = [System.Windows.Media.PenLineJoin]::Round
+
+    # Widen the stroked clip into a fillable outline so it can be cut out. The
+    # hole stays transparent, which is what lets one icon work on light and
+    # dark shells.
+    return [System.Windows.Media.Geometry]::Combine(
+        $shield, $clip.GetWidenedPathGeometry($pen),
+        [System.Windows.Media.GeometryCombineMode]::Exclude, $null)
+}
+
+$markFull   = New-SolidMark $clipPath $strokeWidth
+$markSimple = New-SolidMark $simpleClipPath $simpleStrokeWidth
 
 $accent = [System.Windows.Media.Color]::FromRgb(0xEC, 0x30, 0x13)
 $brush = New-Object System.Windows.Media.SolidColorBrush($accent)
@@ -67,6 +82,8 @@ $brush.Freeze()
 $sizes = @(16, 24, 32, 48, 64, 128, 256)
 
 function New-MarkPng([int]$size) {
+    $mark = if ($size -lt $simplifyBelow) { $markSimple } else { $markFull }
+
     $visual = New-Object System.Windows.Media.DrawingVisual
     $dc = $visual.RenderOpen()
     try {

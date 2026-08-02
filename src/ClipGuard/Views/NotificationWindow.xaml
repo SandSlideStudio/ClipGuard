@@ -8,28 +8,35 @@
         xmlns:ctl="clr-namespace:ClipGuard.Controls"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize"
-        SizeToContent="Height" Width="404"
+        SizeToContent="WidthAndHeight" MaxWidth="404"
         UseLayoutRounding="True"
         FontFamily="{StaticResource FontBody}"
         Foreground="{StaticResource Text}">
 
-  <!-- 12px gutter all round so the drop shadows have room to render -->
+  <!-- 12px gutter all round so the drop shadows have room to render.
+       The window sizes to content: the one-line pill would otherwise stretch
+       to the cards' 404px and read as an empty capsule, so the two card
+       layouts pin themselves to 380 and only the pill flexes. -->
   <Grid Margin="12">
 
     <!-- ══ Small — allowed events, one line, auto-dismiss ═══════════════ -->
     <Border x:Name="SmallCard" Visibility="Collapsed"
             Background="{StaticResource Bg}" CornerRadius="99"
             BorderBrush="#1f000000" BorderThickness="1"
+            HorizontalAlignment="Right" MaxWidth="380"
             Effect="{StaticResource ShadowPill}">
-      <Grid Margin="16,10,8,10">
+      <Grid Margin="15,9,7,9">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
           <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <ctl:ClipGuardMark Grid.Column="0" Width="15" Height="15" VerticalAlignment="Center"
-                           Fill="{StaticResource Neutral500}" Knockout="{StaticResource Bg}" />
+        <!-- Neutral-700, not 500: the mark should read quiet for an allowed
+             event, but at 15px on a light pill anything lighter disappears.
+             The knockout takes the pill's own fill so the clip is a real hole. -->
+        <ctl:ClipGuardMark Grid.Column="0" Width="17" Height="17" VerticalAlignment="Center"
+                           Fill="{StaticResource Neutral700}" Knockout="{StaticResource Bg}" />
 
         <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
                    TextTrimming="CharacterEllipsis">
@@ -45,7 +52,7 @@
     </Border>
 
     <!-- ══ Medium — blocked write ═══════════════════════════════════════ -->
-    <Border x:Name="MediumCard" Visibility="Collapsed"
+    <Border x:Name="MediumCard" Visibility="Collapsed" Width="380"
             Background="{StaticResource Bg}" CornerRadius="14"
             BorderBrush="#1f000000" BorderThickness="1"
             Effect="{StaticResource ShadowCard}">
@@ -109,7 +116,7 @@
     </Border>
 
     <!-- ══ Large — high-risk swap, sticky ═══════════════════════════════ -->
-    <Border x:Name="LargeCard" Visibility="Collapsed"
+    <Border x:Name="LargeCard" Visibility="Collapsed" Width="380"
             Background="{StaticResource Bg}" CornerRadius="14"
             BorderBrush="{StaticResource Accent}" BorderThickness="2"
             Effect="{StaticResource ShadowAlert}">
@@ -192,7 +199,7 @@
          Shares the high-risk card's language but shows the command itself
          rather than a before/after diff: nothing was replaced. Sticky.
     -->
-    <Border x:Name="WarnCard" Visibility="Collapsed"
+    <Border x:Name="WarnCard" Visibility="Collapsed" Width="380"
             Background="{StaticResource Bg}" CornerRadius="14"
             BorderBrush="{StaticResource Accent}" BorderThickness="2"
             Effect="{StaticResource ShadowAlert}">

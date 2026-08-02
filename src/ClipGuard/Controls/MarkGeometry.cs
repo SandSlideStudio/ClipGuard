@@ -33,6 +33,22 @@ public static class MarkGeometry
 
     public const double ClipStrokeWidth = 1.15;
 
+    /// <summary>
+    /// Small-size clip: two wires instead of three, and a fatter stroke.
+    ///
+    /// Below roughly 24px the three-wire clip's gaps fall under a pixel and the
+    /// knockout closes into a grey smudge. Dropping the middle wire doubles the
+    /// gap to 4.4, which still reads at 16px — the size this mark spends most of
+    /// its life at, in the tray and on the one-line toast.
+    /// </summary>
+    public const string SimpleClipPath =
+        "M9.8 8.4 V13.6 C9.8 15.9 14.2 15.9 14.2 13.6 V8.0";
+
+    public const double SimpleClipStrokeWidth = 1.7;
+
+    /// <summary>Below this, use the simplified clip.</summary>
+    public const double SimplifyBelow = 26;
+
     /// <summary>Canvas the paths are authored against.</summary>
     public const double Extent = 24;
 
@@ -42,9 +58,36 @@ public static class MarkGeometry
 
     private static Geometry? _shield;
     private static Geometry? _clip;
+    private static Geometry? _simpleClip;
 
     public static Geometry Shield => _shield ??= Freeze(Geometry.Parse(ShieldPath));
     public static Geometry Clip => _clip ??= Freeze(Geometry.Parse(ClipPath));
+    public static Geometry SimpleClip => _simpleClip ??= Freeze(Geometry.Parse(SimpleClipPath));
+
+    /// <summary>
+    /// The mark as one fillable shape, with the clip genuinely cut out so the
+    /// hole is transparent and the icon works on light and dark shells alike.
+    /// </summary>
+    public static Geometry BuildSolidMark(bool simplified)
+    {
+        var clip = simplified ? SimpleClip : Clip;
+        var width = simplified ? SimpleClipStrokeWidth : ClipStrokeWidth;
+
+        var pen = new System.Windows.Media.Pen(Brushes.Black, width)
+        {
+            StartLineCap = PenLineCap.Round,
+            EndLineCap = PenLineCap.Round,
+            LineJoin = PenLineJoin.Round
+        };
+
+        // Widening turns the stroked clip into a fillable outline, which is what
+        // Combine needs in order to subtract it.
+        var combined = Geometry.Combine(
+            Shield, clip.GetWidenedPathGeometry(pen), GeometryCombineMode.Exclude, null);
+
+        combined.Freeze();
+        return combined;
+    }
 
     private static Geometry Freeze(Geometry geometry)
     {

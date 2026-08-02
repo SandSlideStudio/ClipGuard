@@ -127,31 +127,12 @@ public sealed class TrayService : IDisposable
     }
 
     /// <summary>
-    /// Shield with the clip genuinely subtracted, rather than painted over in a
-    /// background colour — so the hole is transparent and the icon reads on both
-    /// light and dark taskbars.
+    /// The simplified mark: a tray icon is drawn at 16-24px whatever we render
+    /// it at, so the two-wire clip is the right one here regardless of the
+    /// bitmap size we hand Windows.
     /// </summary>
-    private static readonly WpfMedia.Geometry MarkWithClipRemoved = BuildMarkGeometry();
-
-    private static WpfMedia.Geometry BuildMarkGeometry()
-    {
-        var pen = new WpfMedia.Pen(WpfMedia.Brushes.Black, MarkGeometry.ClipStrokeWidth)
-        {
-            StartLineCap = WpfMedia.PenLineCap.Round,
-            EndLineCap = WpfMedia.PenLineCap.Round,
-            LineJoin = WpfMedia.PenLineJoin.Round
-        };
-
-        // Widening turns the stroked clip into a fillable outline, which is what
-        // Combine needs to cut it out.
-        var clipOutline = MarkGeometry.Clip.GetWidenedPathGeometry(pen);
-
-        var combined = WpfMedia.Geometry.Combine(
-            MarkGeometry.Shield, clipOutline, WpfMedia.GeometryCombineMode.Exclude, null);
-
-        combined.Freeze();
-        return combined;
-    }
+    private static readonly WpfMedia.Geometry MarkWithClipRemoved =
+        MarkGeometry.BuildSolidMark(simplified: true);
 
     /// <summary>WPF render target to a GDI+ bitmap, preserving the alpha channel.</summary>
     private static Bitmap ToBitmap(RenderTargetBitmap source, int size)

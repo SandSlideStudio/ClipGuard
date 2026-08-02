@@ -22,9 +22,21 @@
         <Path Data="{x:Static ctl:MarkGeometry.Shield}"
               Fill="{Binding Fill, ElementName=Root}" />
 
-        <Path Data="{x:Static ctl:MarkGeometry.Clip}"
+        <!-- Two clips, one shown: below ~26px the three-wire version's gaps
+             fall under a pixel and it closes into a smudge. Picked by measured
+             size in code-behind so callers don't have to think about it. -->
+        <Path x:Name="FullClip"
+              Data="{x:Static ctl:MarkGeometry.Clip}"
               Stroke="{Binding Knockout, ElementName=Root}"
-              StrokeThickness="1.5"
+              StrokeThickness="1.15"
+              StrokeStartLineCap="Round"
+              StrokeEndLineCap="Round"
+              StrokeLineJoin="Round" />
+
+        <Path x:Name="SimpleClip" Visibility="Collapsed"
+              Data="{x:Static ctl:MarkGeometry.SimpleClip}"
+              Stroke="{Binding Knockout, ElementName=Root}"
+              StrokeThickness="1.7"
               StrokeStartLineCap="Round"
               StrokeEndLineCap="Round"
               StrokeLineJoin="Round" />
