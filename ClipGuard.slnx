@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ClipGuard/ClipGuard.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ClipGuard.Tests/ClipGuard.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,402 @@
+<!--
+  Shared control styles. Geometry (radii, padding, sizes) mirrors the
+  handoff mocks exactly; every colour comes from Tokens.xaml.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:ctl="clr-namespace:ClipGuard.Controls">
+
+  <!-- ── Focus ring: 2px accent, offset 2px ────────────────────────────── -->
+  <Style x:Key="FocusVisual">
+    <Setter Property="Control.Template">
+      <Setter.Value>
+        <ControlTemplate>
+          <Rectangle Margin="-3" StrokeThickness="2" RadiusX="10" RadiusY="10"
+                     Stroke="{StaticResource Accent}" SnapsToDevicePixels="True" />
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- ══ Buttons ═══════════════════════════════════════════════════════════
+       .btn in the mock is Archivo at the heading weight (800), 12px in the
+       app chrome. Radius 9px on the consumer tier.
+  -->
+  <Style x:Key="BtnBase" TargetType="Button">
+    <Setter Property="FontFamily" Value="{StaticResource FontHeading}" />
+    <Setter Property="FontWeight" Value="ExtraBold" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Padding" Value="14,8" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{StaticResource Text}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="Bd"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="9"
+                  SnapsToDevicePixels="True">
+            <ContentPresenter x:Name="Cp"
+                              Margin="{TemplateBinding Padding}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              RecognizesAccessKey="True" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="Bd" Property="Opacity" Value="0.45" />
+              <Setter Property="Cursor" Value="Arrow" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- primary = solid red, ground-coloured label -->
+  <Style x:Key="BtnPrimary" TargetType="Button" BasedOn="{StaticResource BtnBase}">
+    <Setter Property="Background" Value="{StaticResource Accent}" />
+    <Setter Property="Foreground" Value="{StaticResource Bg}" />
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="True">
+        <Setter Property="Background" Value="{StaticResource Accent600}" />
+      </Trigger>
+      <Trigger Property="IsPressed" Value="True">
+        <Setter Property="Background" Value="{StaticResource Accent700}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
+  <!-- secondary = ink outline -->
+  <Style x:Key="BtnSecondary" TargetType="Button" BasedOn="{StaticResource BtnBase}">
+    <Setter Property="BorderBrush" Value="{StaticResource Divider}" />
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="True">
+        <Setter Property="Background" Value="#12201e1d" />
+      </Trigger>
+      <Trigger Property="IsPressed" Value="True">
+        <Setter Property="Background" Value="#24201e1d" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
+  <!-- ghost = borderless, accent label -->
+  <Style x:Key="BtnGhost" TargetType="Button" BasedOn="{StaticResource BtnBase}">
+    <Setter Property="Foreground" Value="{StaticResource Accent700}" />
+    <Setter Property="Padding" Value="10,8" />
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="True">
+        <Setter Property="Background" Value="#1aec3013" />
+      </Trigger>
+      <Trigger Property="IsPressed" Value="True">
+        <Setter Property="Background" Value="#2eec3013" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
+  <!-- full-width, label flush left (tray flyout stack) -->
+  <Style x:Key="BtnBlockSecondary" TargetType="Button" BasedOn="{StaticResource BtnSecondary}">
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+  </Style>
+  <Style x:Key="BtnBlockGhost" TargetType="Button" BasedOn="{StaticResource BtnGhost}">
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+  </Style>
+
+  <!-- window-chrome buttons: 32px rounded targets, close hovers red-tinted -->
+  <Style x:Key="BtnChrome" TargetType="Button">
+    <Setter Property="Width" Value="32" />
+    <Setter Property="Height" Value="32" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Foreground" Value="{StaticResource Neutral700}" />
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="Bd" Background="Transparent" CornerRadius="8">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Bd" Property="Background" Value="{StaticResource Neutral200}" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="BtnChromeClose" TargetType="Button" BasedOn="{StaticResource BtnChrome}">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="Bd" Background="Transparent" CornerRadius="8">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Bd" Property="Background" Value="{StaticResource Accent100}" />
+              <Setter Property="Foreground" Value="{StaticResource Accent700}" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- ══ Pill toggle — 42x24, red when on, 18px knob, 150ms ═══════════════ -->
+  <Style x:Key="ToggleSwitch" TargetType="ToggleButton">
+    <Setter Property="Width" Value="42" />
+    <Setter Property="Height" Value="24" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToggleButton">
+          <Border x:Name="Track" CornerRadius="12" Background="{StaticResource Neutral400}">
+            <Canvas>
+              <Border x:Name="Knob" Width="18" Height="18" CornerRadius="9"
+                      Background="{StaticResource White}" Canvas.Top="3" Canvas.Left="3" />
+            </Canvas>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+              <Trigger.EnterActions>
+                <BeginStoryboard>
+                  <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="Knob"
+                                     Storyboard.TargetProperty="(Canvas.Left)"
+                                     To="21" Duration="0:0:0.15" />
+                    <ColorAnimation Storyboard.TargetName="Track"
+                                    Storyboard.TargetProperty="Background.Color"
+                                    To="#ec3013" Duration="0:0:0.15" />
+                  </Storyboard>
+                </BeginStoryboard>
+              </Trigger.EnterActions>
+              <Trigger.ExitActions>
+                <BeginStoryboard>
+                  <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="Knob"
+                                     Storyboard.TargetProperty="(Canvas.Left)"
+                                     To="3" Duration="0:0:0.15" />
+                    <ColorAnimation Storyboard.TargetName="Track"
+                                    Storyboard.TargetProperty="Background.Color"
+                                    To="#bab6b6" Duration="0:0:0.15" />
+                  </Storyboard>
+                </BeginStoryboard>
+              </Trigger.ExitActions>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Opacity" Value="0.5" />
+              <Setter Property="Cursor" Value="Arrow" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- ══ Tags ══════════════════════════════════════════════════════════════ -->
+  <Style x:Key="TagBase" TargetType="Border">
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Padding" Value="10,3" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <!-- ══ Panels / cards ════════════════════════════════════════════════════
+       The recurring inner panel: neutral-100 fill, 1px neutral-300 hairline.
+  -->
+  <Style x:Key="Panel" TargetType="Border">
+    <Setter Property="Background" Value="{StaticResource Neutral100}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Neutral300}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+  </Style>
+
+  <Style x:Key="StatCard" TargetType="Border" BasedOn="{StaticResource Panel}">
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Padding" Value="16,14" />
+  </Style>
+
+  <!-- blocked/alert variant of the stat card -->
+  <Style x:Key="StatCardAccent" TargetType="Border" BasedOn="{StaticResource StatCard}">
+    <Setter Property="Background" Value="{StaticResource Accent100}" />
+    <Setter Property="BorderBrush" Value="{StaticResource Accent300}" />
+  </Style>
+
+  <!-- event/list row: panel that lifts its hairline on hover -->
+  <Style x:Key="RowPanel" TargetType="Border" BasedOn="{StaticResource Panel}">
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="True">
+        <Setter Property="BorderBrush" Value="{StaticResource Neutral500}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
+  <!-- ══ Type ramp ═════════════════════════════════════════════════════════ -->
+  <Style x:Key="PageTitle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource FontHeading}" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="FontSize" Value="20" />
+    <Setter Property="Foreground" Value="{StaticResource Text}" />
+  </Style>
+
+  <Style x:Key="PageSub" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource FontBody}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{StaticResource Neutral600}" />
+    <Setter Property="Margin" Value="0,6,0,0" />
+  </Style>
+
+  <!-- 10-11px caps with .12em tracking -->
+  <Style x:Key="CapsLabel" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource FontBody}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="Foreground" Value="{StaticResource Neutral600}" />
+    <Setter Property="ctl:Typography.Tracking" Value="0.12" />
+  </Style>
+
+  <Style x:Key="SectionCaps" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource FontBody}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="FontSize" Value="11" />
+    <Setter Property="Foreground" Value="{StaticResource Neutral700}" />
+    <Setter Property="ctl:Typography.Tracking" Value="0.12" />
+  </Style>
+
+  <Style x:Key="StatNumber" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource FontHeading}" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="FontSize" Value="26" />
+    <Setter Property="Margin" Value="0,4,0,0" />
+  </Style>
+
+  <Style x:Key="Mono" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+    <Setter Property="FontSize" Value="11.5" />
+  </Style>
+
+  <!-- ══ Search field ══════════════════════════════════════════════════════ -->
+  <Style x:Key="SearchBox" TargetType="TextBox">
+    <Setter Property="FontFamily" Value="{StaticResource FontBody}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{StaticResource Text}" />
+    <Setter Property="CaretBrush" Value="{StaticResource Accent}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+
+  <!-- ══ Segmented control (auto-clear) ════════════════════════════════════ -->
+  <Style x:Key="SegOption" TargetType="RadioButton">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Border x:Name="Bd" Background="Transparent" Padding="12,7">
+            <TextBlock x:Name="Tx" Text="{TemplateBinding Content}"
+                       FontFamily="{StaticResource FontBody}"
+                       FontWeight="Medium" FontSize="11.5"
+                       Foreground="{StaticResource Text}" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Bd" Property="Background" Value="{StaticResource Neutral200}" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="Bd" Property="Background" Value="{StaticResource Text}" />
+              <Setter TargetName="Tx" Property="Foreground" Value="{StaticResource Bg}" />
+              <Setter TargetName="Tx" Property="FontWeight" Value="SemiBold" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- ══ Acceptance checkbox (wizard step 2) ═══════════════════════════════ -->
+  <Style x:Key="AcceptCheck" TargetType="CheckBox">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="CheckBox">
+          <StackPanel Orientation="Horizontal">
+            <Border x:Name="Box" Width="18" Height="18" CornerRadius="5"
+                    BorderThickness="2" BorderBrush="{StaticResource Neutral500}"
+                    Background="Transparent" VerticalAlignment="Center">
+              <Path x:Name="Tick" Visibility="Collapsed"
+                    Data="M 3.5 7.5 L 6.2 10.2 L 11 4.2"
+                    Stroke="{StaticResource White}" StrokeThickness="2.2"
+                    StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                    StrokeLineJoin="Round" />
+            </Border>
+            <ContentPresenter Margin="10,0,0,0" VerticalAlignment="Center" />
+          </StackPanel>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="Box" Property="Background" Value="{StaticResource Accent}" />
+              <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource Accent}" />
+              <Setter TargetName="Tick" Property="Visibility" Value="Visible" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- ══ Scrollbar — slim, neutral, matches the soft tier ══════════════════ -->
+  <Style x:Key="SlimScrollBar" TargetType="ScrollBar">
+    <Setter Property="Width" Value="8" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ScrollBar">
+          <Track x:Name="PART_Track" IsDirectionReversed="True">
+            <Track.Thumb>
+              <Thumb>
+                <Thumb.Template>
+                  <ControlTemplate TargetType="Thumb">
+                    <Border Background="{StaticResource Neutral400}" CornerRadius="4" Margin="2,0" />
+                  </ControlTemplate>
+                </Thumb.Template>
+              </Thumb>
+            </Track.Thumb>
+            <Track.IncreaseRepeatButton>
+              <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" />
+            </Track.IncreaseRepeatButton>
+            <Track.DecreaseRepeatButton>
+              <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" />
+            </Track.DecreaseRepeatButton>
+          </Track>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- Applied implicitly: Resources isn't a dependency property, so it can't be
+       pushed through a Setter on the ScrollViewer style. -->
+  <Style TargetType="ScrollBar" BasedOn="{StaticResource SlimScrollBar}" />
+
+  <Style x:Key="SlimScrollViewer" TargetType="ScrollViewer">
+    <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+  </Style>
+
+</ResourceDictionary>

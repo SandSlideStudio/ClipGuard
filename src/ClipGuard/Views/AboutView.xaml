@@ -1,0 +1,36 @@
+<!-- About tab — mock 3a. -->
+<UserControl x:Class="ClipGuard.Views.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:ClipGuard.Controls"
+             FontFamily="{StaticResource FontBody}"
+             Foreground="{StaticResource Text}">
+
+  <Border Style="{StaticResource Panel}" CornerRadius="12" Padding="20,18"
+          MaxWidth="460" HorizontalAlignment="Left" VerticalAlignment="Top">
+    <StackPanel>
+      <StackPanel Orientation="Horizontal">
+        <ctl:PixelShield Width="26" Height="29" VerticalAlignment="Center"
+                         Fill="{StaticResource Accent}"
+                         NotchFill="{StaticResource Neutral100}" />
+        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+          <TextBlock Text="ClipGuard v1.4.2" FontFamily="{StaticResource FontHeading}"
+                     FontWeight="Bold" FontSize="15" />
+          <TextBlock Text="by SandSlide Studio · yes, the game people"
+                     FontSize="11.5" Foreground="{StaticResource Neutral600}" />
+        </StackPanel>
+      </StackPanel>
+
+      <TextBlock Margin="0,12,0,0" FontSize="12" LineHeight="18.6" TextWrapping="Wrap"
+                 Foreground="{StaticResource Neutral700}"
+                 Text="We got tired of apps messing with our clipboards between playtests, so we built this. Everything runs locally — your clipboard never leaves your machine." />
+
+      <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+        <Button Content="Check for updates" Style="{StaticResource BtnSecondary}"
+                FontSize="11.5" Click="OnCheckUpdates" />
+        <Button Content="sandslide.studio" Style="{StaticResource BtnGhost}"
+                FontSize="11.5" Margin="8,0,0,0" Click="OnOpenSite" />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

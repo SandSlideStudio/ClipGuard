@@ -1,0 +1,81 @@
+<!--
+  Modernist design tokens, ported 1:1 from the handoff's styles.css.
+  Colour literals live here and nowhere else; every style and view
+  references these keys by name.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+  <!-- ── Ground / ink / accent ─────────────────────────────────────────── -->
+  <Color x:Key="BgColor">#f3f2f2</Color>
+  <Color x:Key="SurfaceColor">#eae9e9</Color>
+  <Color x:Key="TextColor">#201e1d</Color>
+  <Color x:Key="AccentColor">#ec3013</Color>
+
+  <SolidColorBrush x:Key="Bg" Color="{StaticResource BgColor}" />
+  <SolidColorBrush x:Key="Surface" Color="{StaticResource SurfaceColor}" />
+  <SolidColorBrush x:Key="Text" Color="{StaticResource TextColor}" />
+  <SolidColorBrush x:Key="Accent" Color="{StaticResource AccentColor}" />
+
+  <!-- color-mix(in srgb, #201e1d 40%, transparent) -->
+  <SolidColorBrush x:Key="Divider" Color="#201e1d" Opacity="0.4" />
+
+  <!-- ── Neutral ramp ──────────────────────────────────────────────────── -->
+  <SolidColorBrush x:Key="Neutral100" Color="#f8f4f4" />
+  <SolidColorBrush x:Key="Neutral200" Color="#eae7e7" />
+  <SolidColorBrush x:Key="Neutral300" Color="#d7d3d3" />
+  <SolidColorBrush x:Key="Neutral400" Color="#bab6b6" />
+  <SolidColorBrush x:Key="Neutral500" Color="#9b9797" />
+  <SolidColorBrush x:Key="Neutral600" Color="#7d7979" />
+  <SolidColorBrush x:Key="Neutral700" Color="#605d5d" />
+  <SolidColorBrush x:Key="Neutral800" Color="#444141" />
+  <SolidColorBrush x:Key="Neutral900" Color="#2d2b2b" />
+
+  <!-- ── Accent ramp ───────────────────────────────────────────────────── -->
+  <SolidColorBrush x:Key="Accent100" Color="#fff2ef" />
+  <SolidColorBrush x:Key="Accent200" Color="#ffe0d9" />
+  <SolidColorBrush x:Key="Accent300" Color="#ffc4b8" />
+  <SolidColorBrush x:Key="Accent400" Color="#ff9783" />
+  <SolidColorBrush x:Key="Accent500" Color="#ff563c" />
+  <SolidColorBrush x:Key="Accent600" Color="#dd2b0f" />
+  <!-- accent-700 is the accessible red for small text (accent-on-ground is only ~3:1) -->
+  <SolidColorBrush x:Key="Accent700" Color="#ae1800" />
+  <SolidColorBrush x:Key="Accent800" Color="#7c1405" />
+  <SolidColorBrush x:Key="Accent900" Color="#4d170e" />
+
+  <SolidColorBrush x:Key="White" Color="#ffffff" />
+
+  <!-- ── Type ──────────────────────────────────────────────────────────── -->
+  <!-- Assembly-qualified so the family resolves no matter which assembly is the
+       entry point (the app itself, or a tool referencing it). -->
+  <FontFamily x:Key="FontBody">pack://application:,,,/ClipGuard;component/Assets/Fonts/#Archivo</FontFamily>
+  <FontFamily x:Key="FontHeading">pack://application:,,,/ClipGuard;component/Assets/Fonts/#Archivo</FontFamily>
+  <FontFamily x:Key="FontMono">Consolas, Cascadia Mono, Menlo, monospace</FontFamily>
+
+  <!-- ── Radii (consumer tier: soft) ───────────────────────────────────── -->
+  <CornerRadius x:Key="RadiusCard">14</CornerRadius>
+  <CornerRadius x:Key="RadiusPanel">12</CornerRadius>
+  <CornerRadius x:Key="RadiusInner">10</CornerRadius>
+  <CornerRadius x:Key="RadiusButton">9</CornerRadius>
+  <CornerRadius x:Key="RadiusSmall">8</CornerRadius>
+  <CornerRadius x:Key="RadiusPill">99</CornerRadius>
+
+  <sys:Double x:Key="RadiusCardD">14</sys:Double>
+  <sys:Double x:Key="RadiusButtonD">9</sys:Double>
+
+  <!-- ── Elevation ─────────────────────────────────────────────────────── -->
+  <!-- cards: 0 16px 40px rgba(0,0,0,.16) -->
+  <DropShadowEffect x:Key="ShadowCard" BlurRadius="40" ShadowDepth="16"
+                    Direction="270" Color="#000000" Opacity="0.16" />
+  <!-- popups: 0 12px 32px rgba(0,0,0,.18) -->
+  <DropShadowEffect x:Key="ShadowPopup" BlurRadius="32" ShadowDepth="12"
+                    Direction="270" Color="#000000" Opacity="0.18" />
+  <!-- small pill toast: 0 10px 28px rgba(0,0,0,.14) -->
+  <DropShadowEffect x:Key="ShadowPill" BlurRadius="28" ShadowDepth="10"
+                    Direction="270" Color="#000000" Opacity="0.14" />
+  <!-- large / high-risk: 0 16px 40px rgba(0,0,0,.2) -->
+  <DropShadowEffect x:Key="ShadowAlert" BlurRadius="40" ShadowDepth="16"
+                    Direction="270" Color="#000000" Opacity="0.2" />
+
+</ResourceDictionary>

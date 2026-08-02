@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <!-- WinForms is pulled in only for NotifyIcon; WPF has no tray-icon primitive. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Regenerate with build/make-icon.ps1 if the shield grid changes. -->
+    <ApplicationIcon>Assets\ClipGuard.ico</ApplicationIcon>
+    <AssemblyTitle>ClipGuard</AssemblyTitle>
+    <Product>ClipGuard</Product>
+    <Company>SandSlide Studio</Company>
+    <Version>1.4.2</Version>
+    <RootNamespace>ClipGuard</RootNamespace>
+    <!-- WFO0003 tells WinForms apps to move DPI config out of the manifest.
+         This is a WPF app; the manifest is the right mechanism here. -->
+    <NoWarn>$(NoWarn);WFO0003</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Fonts\*.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The SIL Open Font License requires its text to accompany the font
+         wherever the font is distributed, so it ships beside the binary rather
+         than living only in the repo. -->
+    <Content Include="Assets\Fonts\OFL.txt">
+      <Link>THIRD-PARTY-LICENSES\Archivo-OFL.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    # Windows-only by necessity: the suite executes the defused stand-ins
+    # through cmd and PowerShell, which is the check that matters most.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore ClipGuard.slnx
+
+      - name: Build
+        run: dotnet build ClipGuard.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test tests/ClipGuard.Tests/ClipGuard.Tests.csproj --configuration Release --no-build --verbosity normal
+
+      - name: Verify the app icon is in sync with the shield grid
+        shell: pwsh
+        run: |
+          ./build/make-icon.ps1 -OutPath ./icon-check.ico
+          $generated = (Get-FileHash ./icon-check.ico).Hash
+          $committed = (Get-FileHash ./src/ClipGuard/Assets/ClipGuard.ico).Hash
+          if ($generated -ne $committed) {
+            throw 'ClipGuard.ico is stale - run build/make-icon.ps1 and commit the result.'
+          }
+          Remove-Item ./icon-check.ico
+
+  publish:
+    needs: build-and-test
+    runs-on: windows-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish
+        shell: pwsh
+        run: ./build/publish.ps1
+
+      # NOTE: the artifact is unsigned. Signing needs a certificate on a
+      # hardware token or cloud HSM — see "Packaging and signing" in README.md.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clipguard-unsigned-win-x64
+          path: dist/win-x64/
+          retention-days: 14
