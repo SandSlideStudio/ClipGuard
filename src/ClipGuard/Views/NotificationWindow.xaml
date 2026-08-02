@@ -28,8 +28,8 @@
           <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <ctl:PixelShield Grid.Column="0" Width="13" Height="15" VerticalAlignment="Center"
-                         Fill="{StaticResource Neutral500}" NotchFill="{StaticResource Bg}" />
+        <ctl:ClipGuardMark Grid.Column="0" Width="15" Height="15" VerticalAlignment="Center"
+                           Fill="{StaticResource Neutral500}" Knockout="{StaticResource Bg}" />
 
         <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"
                    TextTrimming="CharacterEllipsis">
@@ -65,9 +65,9 @@
 
           <Border Grid.Row="0" Grid.Column="0" Width="36" Height="36" CornerRadius="10"
                   Background="{StaticResource Accent100}" VerticalAlignment="Top">
-            <ctl:PixelShield Width="16" Height="18"
-                             Fill="{StaticResource Accent}"
-                             NotchFill="{StaticResource Accent100}" />
+            <ctl:ClipGuardMark Width="20" Height="20"
+                               Fill="{StaticResource Accent}"
+                               Knockout="{StaticResource Accent100}" />
           </Border>
 
           <StackPanel Grid.Row="0" Grid.Column="1" Margin="12,0,0,0">

@@ -7,9 +7,28 @@ public partial class AboutView : UserControl
 {
     public AboutView() => InitializeComponent();
 
-    private void OnCheckUpdates(object sender, RoutedEventArgs e) =>
-        MessageBox.Show("You're on v1.4.2 — the latest.", "ClipGuard",
-            MessageBoxButton.OK, MessageBoxImage.Information);
+    /// <summary>
+    /// No update service exists yet, so this reports honestly rather than
+    /// pretending to reach a server. The mark animates while it works — when a
+    /// real check lands here, the waiting state is already built.
+    /// </summary>
+    private async void OnCheckUpdates(object sender, RoutedEventArgs e)
+    {
+        UpdateButton.IsEnabled = false;
+        UpdateStatus.Text = "Checking…";
+        Mark.IsAnimating = true;
+
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(1.4));
+            UpdateStatus.Text = "You're on v1.4.2 — no update service yet.";
+        }
+        finally
+        {
+            Mark.IsAnimating = false;
+            UpdateButton.IsEnabled = true;
+        }
+    }
 
     private void OnOpenSite(object sender, RoutedEventArgs e)
     {

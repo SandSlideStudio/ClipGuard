@@ -1,6 +1,9 @@
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Windows.Media.Imaging;
+using ClipGuard.Controls;
 using WinForms = System.Windows.Forms;
+using WpfMedia = System.Windows.Media;
 
 // GlobalUsings.cs points Color/Brush at WPF for the rest of the app. Global
 // aliases can't be shadowed per-file, so GDI+ gets its own names here.
@@ -89,41 +92,92 @@ public sealed class TrayService : IDisposable
     }
 
     /// <summary>
-    /// Renders the pixel shield into a 32x32 icon. Same grid as PixelShield.xaml:
-    /// an 8x9 shield with a 2x2 notch, drawn with hard edges.
+    /// Renders the tray icon from <see cref="MarkGeometry"/> using WPF, then
+    /// converts to a GDI+ icon.
+    ///
+    /// Drawing it a second time in GDI+ would mean two hand-maintained copies of
+    /// the mark that silently diverge; going through WPF means the tray icon is
+    /// the same geometry the app draws on screen, anti-aliased identically.
+    ///
+    /// The clip is knocked out to transparent rather than painted, so the icon
+    /// reads correctly on both light and dark taskbars.
     /// </summary>
     private static Icon BuildIcon(GdiColor color)
     {
-        const int cell = 3;
-        const int gridW = 8, gridH = 9;
         const int size = 32;
+        var scale = size / MarkGeometry.Extent;
 
-        const int offsetX = (size - gridW * cell) / 2;
-        const int offsetY = (size - gridH * cell) / 2;
+        var brush = new WpfMedia.SolidColorBrush(
+            WpfMedia.Color.FromRgb(color.R, color.G, color.B));
+        brush.Freeze();
 
-        using var bitmap = new Bitmap(size, size);
-        using (var g = Graphics.FromImage(bitmap))
+        var visual = new WpfMedia.DrawingVisual();
+        using (var dc = visual.RenderOpen())
         {
-            g.SmoothingMode = SmoothingMode.None;
-            g.InterpolationMode = InterpolationMode.NearestNeighbor;
-            g.Clear(GdiColor.Transparent);
-
-            using var brush = new SolidBrush(color);
-
-            // Shield body, matching the SVG rects.
-            Fill(g, brush, offsetX, offsetY, 1, 0, 6, 1, cell);
-            Fill(g, brush, offsetX, offsetY, 0, 1, 8, 4, cell);
-            Fill(g, brush, offsetX, offsetY, 1, 5, 6, 2, cell);
-            Fill(g, brush, offsetX, offsetY, 2, 7, 4, 1, cell);
-            Fill(g, brush, offsetX, offsetY, 3, 8, 2, 1, cell);
-
-            // Punch the notch back out to transparent.
-            g.CompositingMode = CompositingMode.SourceCopy;
-            using var clear = new SolidBrush(GdiColor.Transparent);
-            g.FillRectangle(clear, new Rectangle(
-                offsetX + 3 * cell, offsetY + 2 * cell, 2 * cell, 2 * cell));
+            dc.PushTransform(new WpfMedia.ScaleTransform(scale, scale));
+            dc.DrawGeometry(brush, null, MarkWithClipRemoved);
+            dc.Pop();
         }
 
+        var rendered = new RenderTargetBitmap(size, size, 96, 96, WpfMedia.PixelFormats.Pbgra32);
+        rendered.Render(visual);
+
+        using var bitmap = ToBitmap(rendered, size);
+        return FromBitmap(bitmap);
+    }
+
+    /// <summary>
+    /// Shield with the clip genuinely subtracted, rather than painted over in a
+    /// background colour — so the hole is transparent and the icon reads on both
+    /// light and dark taskbars.
+    /// </summary>
+    private static readonly WpfMedia.Geometry MarkWithClipRemoved = BuildMarkGeometry();
+
+    private static WpfMedia.Geometry BuildMarkGeometry()
+    {
+        var pen = new WpfMedia.Pen(WpfMedia.Brushes.Black, MarkGeometry.ClipStrokeWidth)
+        {
+            StartLineCap = WpfMedia.PenLineCap.Round,
+            EndLineCap = WpfMedia.PenLineCap.Round,
+            LineJoin = WpfMedia.PenLineJoin.Round
+        };
+
+        // Widening turns the stroked clip into a fillable outline, which is what
+        // Combine needs to cut it out.
+        var clipOutline = MarkGeometry.Clip.GetWidenedPathGeometry(pen);
+
+        var combined = WpfMedia.Geometry.Combine(
+            MarkGeometry.Shield, clipOutline, WpfMedia.GeometryCombineMode.Exclude, null);
+
+        combined.Freeze();
+        return combined;
+    }
+
+    /// <summary>WPF render target to a GDI+ bitmap, preserving the alpha channel.</summary>
+    private static Bitmap ToBitmap(RenderTargetBitmap source, int size)
+    {
+        var stride = size * 4;
+        var pixels = new byte[stride * size];
+        source.CopyPixels(pixels, stride, 0);
+
+        var bitmap = new Bitmap(size, size, PixelFormat.Format32bppArgb);
+        var data = bitmap.LockBits(new Rectangle(0, 0, size, size),
+            ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+        try
+        {
+            System.Runtime.InteropServices.Marshal.Copy(pixels, 0, data.Scan0, pixels.Length);
+        }
+        finally
+        {
+            bitmap.UnlockBits(data);
+        }
+
+        return bitmap;
+    }
+
+    private static Icon FromBitmap(Bitmap bitmap)
+    {
         var handle = bitmap.GetHicon();
         using var temp = Icon.FromHandle(handle);
 
@@ -136,10 +190,6 @@ public sealed class TrayService : IDisposable
     [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
     [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
     private static extern bool DestroyIcon(IntPtr handle);
-
-    private static void Fill(Graphics g, GdiBrush brush, int ox, int oy,
-                             int x, int y, int w, int h, int cell) =>
-        g.FillRectangle(brush, ox + x * cell, oy + y * cell, w * cell, h * cell);
 
     public void Dispose()
     {

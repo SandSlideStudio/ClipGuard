@@ -1,0 +1,49 @@
+<!--
+  The ClipGuard mark. Static by default: a paperclip held inside a shield.
+
+  Set IsAnimating to play the interception — a hostile write arrives, the shield
+  braces, and it's turned away. That belongs to loading and waiting states, not
+  to the mark itself, so the threat block is collapsed unless asked for.
+-->
+<UserControl x:Class="ClipGuard.Controls.ClipGuardMark"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:ClipGuard.Controls"
+             x:Name="Root">
+  <Viewbox Stretch="Uniform">
+    <Canvas Width="24" Height="24" ClipToBounds="False">
+
+      <!-- shield + knocked-out clip move together when bracing -->
+      <Canvas x:Name="ShieldGroup" Width="24" Height="24" ClipToBounds="False">
+        <Canvas.RenderTransform>
+          <TranslateTransform x:Name="ShieldShift" />
+        </Canvas.RenderTransform>
+
+        <Path Data="{x:Static ctl:MarkGeometry.Shield}"
+              Fill="{Binding Fill, ElementName=Root}" />
+
+        <Path Data="{x:Static ctl:MarkGeometry.Clip}"
+              Stroke="{Binding Knockout, ElementName=Root}"
+              StrokeThickness="1.5"
+              StrokeStartLineCap="Round"
+              StrokeEndLineCap="Round"
+              StrokeLineJoin="Round" />
+      </Canvas>
+
+      <Rectangle x:Name="Threat"
+                 Canvas.Left="19.8" Canvas.Top="10.4"
+                 Width="3.2" Height="3.2" RadiusX="0.5" RadiusY="0.5"
+                 Fill="{Binding ThreatFill, ElementName=Root}"
+                 Opacity="0"
+                 RenderTransformOrigin="0.5,0.5">
+        <Rectangle.RenderTransform>
+          <TransformGroup>
+            <RotateTransform x:Name="ThreatSpin" />
+            <TranslateTransform x:Name="ThreatShift" X="13" />
+          </TransformGroup>
+        </Rectangle.RenderTransform>
+      </Rectangle>
+
+    </Canvas>
+  </Viewbox>
+</UserControl>

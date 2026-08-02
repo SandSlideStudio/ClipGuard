@@ -44,9 +44,9 @@
             BorderBrush="{StaticResource Neutral300}" BorderThickness="0,0,0,1">
       <Grid>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
-          <ctl:PixelShield Width="14" Height="15" VerticalAlignment="Center"
-                           Fill="{StaticResource Accent}"
-                           NotchFill="{StaticResource Neutral100}" />
+          <ctl:ClipGuardMark Width="16" Height="16" VerticalAlignment="Center"
+                             Fill="{StaticResource Accent}"
+                             Knockout="{StaticResource Neutral100}" />
           <TextBlock Text="ClipGuard" Margin="8,0,0,0" VerticalAlignment="Center"
                      FontFamily="{StaticResource FontHeading}" FontWeight="SemiBold" FontSize="12" />
         </StackPanel>
