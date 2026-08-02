@@ -239,46 +239,24 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
         // A write from a process that isn't the one the user is looking at is
         // the strongest signal available without a keyboard hook.
         var background = ownerPid != 0 && foregroundPid != 0 && ownerPid != foregroundPid;
-        var riskShaped = RiskAnalyzer.Classify(e.Text) != RiskKind.None;
-        var changed = !string.Equals(previous, e.Text, StringComparison.Ordinal);
 
-        var rule = FindRule(writer.Name);
+        // The decision itself is a pure function — see DetectionPolicy. This
+        // method's job is gathering the inputs and applying the consequences.
+        var outcome = DetectionPolicy.Evaluate(new DetectionInputs
+        {
+            Text = e.Text,
+            Previous = previous,
+            WriterName = writer.Name,
+            ArrivedRapidly = rapid,
+            FromBackgroundApp = background,
+            Rule = FindRule(writer.Name)?.Rule,
+            IsPaused = IsPaused,
+            WarnRiskyContentEnabled = Settings.WarnRiskyContent,
+            DefuseEnabled = Settings.DefuseRiskyCommands,
+            TrustedSources = TrustedSources
+        });
 
-        // A swap that keeps the *shape* of what you copied — an address for a
-        // different address, a command for a different command — is the signature
-        // of the attack. It's the only signal strong enough to act on when the
-        // writer is the focused app, which is the case for a malicious web page
-        // rewriting the clipboard inside your browser.
-        var sameKindSwap = changed
-                           && RiskAnalyzer.Classify(previous) != RiskKind.None
-                           && RiskAnalyzer.Classify(previous) == RiskAnalyzer.Classify(e.Text);
-
-        // Substitution needs prior content plus two corroborating signals — any
-        // one alone produces far too many false positives in normal use.
-        // Non-text content (images, files) is logged but never judged: we can't
-        // read it, so we have nothing to reason about.
-        var substitution = changed
-                           && !string.IsNullOrEmpty(previous)
-                           && !string.IsNullOrEmpty(e.Text)
-                           && ((background && (riskShaped || rapid))
-                               || (rapid && sameKindSwap));
-
-        var blockedByRule = rule?.Rule == RuleKind.Blocked;
-        var allowedByRule = rule?.Rule == RuleKind.AlwaysAllow;
-
-        // A command that only fetches from a vendor's own install endpoint is an
-        // install step, not a payload. `irm ollama.com/install.ps1 | iex` is the
-        // same *shape* as a ClickFix payload — the source is what differs, and
-        // an attacker can't serve from ollama.com. Exempt from blocking as well
-        // as warning: silently reverting someone's install command is worse than
-        // asking about it.
-        var trustedSource = RiskAnalyzer.IsTrustedInstallSource(e.Text, TrustedSources);
-
-        var shouldBlock = !IsPaused
-                          && (blockedByRule
-                              || (substitution && !allowedByRule && !trustedSource));
-
-        var highRisk = shouldBlock && RiskAnalyzer.IsHighRiskSubstitution(previous, e.Text);
+        var shouldBlock = outcome.Block;
 
         if (shouldBlock)
         {
@@ -294,24 +272,8 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
         _lastChangeAt = now;
         _lastWriter = writer;
 
-        // Nothing was replaced, but something dangerous just landed. This is the
-        // ClickFix shape: a page hands you a command and asks you to paste it to
-        // "prove you're human". Warn without blocking — you may have copied a
-        // legitimate install command yourself.
-        var warn = !shouldBlock
-                   && !IsPaused
-                   && !allowedByRule
-                   && !trustedSource
-                   && Settings.WarnRiskyContent
-                   && ShouldWarnAboutContent(e.Text, writer);
-
-        // Warning only helps if it's seen. Swapping the command for an inert one
-        // means missing the notification and pasting anyway is survivable — the
-        // failure mode becomes "nothing happened" instead of a compromised box.
-        // Only commands are defused; a wallet address is data, not a payload.
-        var defuse = warn
-                     && Settings.DefuseRiskyCommands
-                     && RiskAnalyzer.Classify(e.Text) == RiskKind.ShellCommand;
+        var warn = outcome.Warn;
+        var defuse = outcome.Defuse;
 
         if (defuse)
         {
@@ -323,10 +285,6 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
             _trustedContent = standIn;
         }
 
-        var category = shouldBlock ? RiskAnalyzer.CategoryFor(e.Text)
-                     : warn ? EventCategory.SuspiciousContent
-                     : EventCategory.ClipboardWrite;
-
         var record = new ClipboardEvent
         {
             Id = NextEventId(),
@@ -334,7 +292,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
             ProcessPath = writer.Path,
             FriendlyName = writer.FriendlyName,
             Action = ClipboardAction.Write,
-            Category = category,
+            Category = outcome.Category,
             // Blank rows read as broken in History; say what actually happened.
             ContentPreview = string.IsNullOrEmpty(e.Text)
                 ? "(image or file — not text)"
@@ -343,7 +301,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
             Blocked = shouldBlock,
             Warned = warn,
             Defused = defuse,
-            HighRisk = highRisk || RiskAnalyzer.IsVerificationLure(e.Text),
+            HighRisk = outcome.HighRisk,
             Timestamp = now
         };
 
@@ -360,7 +318,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
         {
             NotificationRequested?.Invoke(this, new NotificationRequest
             {
-                Kind = highRisk ? NotificationKind.HighRiskSwap
+                Kind = outcome.HighRiskSwap ? NotificationKind.HighRiskSwap
                      : shouldBlock ? NotificationKind.Blocked
                      : warn ? NotificationKind.ContentWarning
                      : NotificationKind.Allowed,
@@ -375,17 +333,6 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
     /// there — you copying an address from your own wallet is routine, a web
     /// page placing one on your clipboard is not.
     /// </summary>
-    private static bool ShouldWarnAboutContent(string? text, ProcessIdentity writer) =>
-        // Belt and braces: our own stand-in classifies as harmless anyway, but
-        // never let defusing feed itself.
-        RiskAnalyzer.IsDefusedReplacement(text) ? false :
-        RiskAnalyzer.Classify(text) switch
-        {
-            RiskKind.ShellCommand => true,
-            RiskKind.CryptoAddress => IsBrowser(writer.Name),
-            _ => false
-        };
-
     /// <summary>
     /// Writers whose clipboard activity is never surfaced — no notification, no
     /// history entry. Hardcoded and deliberately not user-editable: this is
@@ -415,14 +362,8 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
                && string.Equals(writer.Path, OwnExecutablePath, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static readonly string[] Browsers =
-    [
-        "chrome.exe", "msedge.exe", "firefox.exe", "brave.exe", "opera.exe",
-        "vivaldi.exe", "arc.exe", "iexplore.exe", "chromium.exe", "librewolf.exe"
-    ];
-
-    public static bool IsBrowser(string processName) =>
-        Browsers.Contains(processName, StringComparer.OrdinalIgnoreCase);
+    /// <summary>Kept here because the notification views already call it.</summary>
+    public static bool IsBrowser(string processName) => DetectionPolicy.IsBrowser(processName);
 
     /// <summary>Current clipboard text, for the paste guard's pre-paste check.</summary>
     public string? CurrentClipboardText => _trustedContent;
