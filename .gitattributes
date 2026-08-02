@@ -1,0 +1,17 @@
+# Normalise line endings in the repository, check out native.
+# Without this, every commit from Windows warns about LF/CRLF conversion and
+# cross-platform clones produce whole-file diffs.
+* text=auto
+
+# PowerShell is happiest with CRLF on Windows.
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Inno Setup's compiler expects CRLF.
+*.iss text eol=crlf
+
+# Never touch these.
+*.png binary
+*.ico binary
+*.ttf binary
