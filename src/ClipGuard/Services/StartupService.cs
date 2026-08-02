@@ -28,8 +28,15 @@ public static class StartupService
         }
     }
 
+    /// <summary>
+    /// Writes or clears the Run entry. Refuses to enable it when the executable
+    /// sits somewhere volatile: a startup entry pointing at a path that gets
+    /// cleaned up is worse than none, because the user believes they're covered.
+    /// </summary>
     public static void Apply(bool enabled, bool launchMinimized)
     {
+        if (enabled && InstallLocation.Diagnose() != LocationProblem.None) enabled = false;
+
         try
         {
             using var key = Registry.CurrentUser.OpenSubKey(RunKey, writable: true);

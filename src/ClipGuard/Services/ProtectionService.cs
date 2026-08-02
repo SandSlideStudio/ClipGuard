@@ -100,6 +100,12 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
     // ── State exposed to the UI ───────────────────────────────────────────
 
     public AppSettings Settings { get; }
+
+    /// <summary>
+    /// Running from a location that won't survive, so protection works now but
+    /// cannot be registered to start with Windows. Set once at startup.
+    /// </summary>
+    public bool IsTestMode { get; init; }
     public ObservableCollection<AppRule> Rules { get; }
     public ObservableCollection<ClipboardEvent> Events { get; }
 
@@ -124,6 +130,11 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
     public string StatusTitle => !IsHealthy ? "Not protecting"
                                : IsPaused ? "Taking a nap"
                                : "Standing guard";
+
+    /// <summary>Second line of the status chip. Names test mode, since it changes what happens tomorrow.</summary>
+    public string StatusDetail => IsTestMode
+        ? "Test mode · won't start with Windows"
+        : $"v{typeof(ProtectionService).Assembly.GetName().Version?.ToString(3) ?? "1.0.0"} · SandSlide";
 
     public string StatusSub => !IsHealthy
         ? "ClipGuard couldn't attach to the clipboard. Restart it: you are not protected."

@@ -30,6 +30,17 @@ First public release.
   tell ClipGuard it got something wrong.
 - **Auto-clear** the clipboard after 60 seconds or 5 minutes.
 
+### Installation
+
+- ClipGuard checks where it is running from at startup. Downloads, temporary
+  folders, removable drives and network shares are refused, because the startup
+  entry records the executable's path and would break silently when that folder
+  is cleaned or unplugged.
+- It offers to copy itself somewhere permanent, with a folder picker, then
+  restarts from the new location and removes the original.
+- Declining runs **test mode**: protection works normally for the session, but
+  startup registration is disabled and the sidebar says so.
+
 ### Privacy
 
 - Event history encrypted at rest with Windows DPAPI, scoped to your user.

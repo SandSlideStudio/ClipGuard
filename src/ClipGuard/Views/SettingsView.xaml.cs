@@ -12,7 +12,26 @@ public partial class SettingsView : UserControl
     public SettingsView()
     {
         InitializeComponent();
-        DataContextChanged += (_, _) => LoadSegmentedState();
+        DataContextChanged += (_, _) =>
+        {
+            LoadSegmentedState();
+            ApplyTestMode();
+        };
+    }
+
+    /// <summary>
+    /// In test mode the startup entry would point at a path that won't be there
+    /// tomorrow, so the toggle is disabled rather than left to fail silently.
+    /// </summary>
+    private void ApplyTestMode()
+    {
+        if (Vm is null || !Vm.Protection.IsTestMode) return;
+
+        StartupToggle.IsEnabled = false;
+        StartupToggle.IsChecked = false;
+        StartupCaption.Text =
+            "Unavailable in test mode. ClipGuard is running from a folder that won't last, "
+            + "so a startup entry would break. Move it somewhere permanent to enable this.";
     }
 
     private MainViewModel? Vm => DataContext as MainViewModel;

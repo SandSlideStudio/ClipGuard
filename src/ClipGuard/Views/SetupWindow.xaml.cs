@@ -32,7 +32,13 @@ public partial class SetupWindow : Window
         _settings = settings;
         InitializeComponent();
 
-        PrefStartup.IsChecked = settings.StartWithWindows;
+        // Nothing here can promise a startup entry if the executable is somewhere
+        // that won't survive, so don't offer one.
+        var volatileLocation = InstallLocation.Diagnose() != LocationProblem.None;
+
+        PrefStartup.IsChecked = settings.StartWithWindows && !volatileLocation;
+        PrefStartup.IsEnabled = !volatileLocation;
+        if (volatileLocation) StartupCaption.Text = "Unavailable while running from a temporary location";
         PrefMinimized.IsChecked = settings.LaunchMinimized;
         PrefToasts.IsChecked = settings.ShowNotifications;
         PrefCrash.IsChecked = settings.CrashReports;

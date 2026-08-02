@@ -79,6 +79,16 @@ yourself with the [.NET 10 SDK](https://dotnet.microsoft.com/download):
 dotnet run --project src/ClipGuard
 ```
 
+**It will ask you to move it out of Downloads.** "Start with Windows" records
+wherever the executable currently sits. Run it from Downloads, enable that, then
+tidy the folder months later and protection stops at the next sign-in with no
+warning at all. So ClipGuard checks where it's running from and offers to move
+itself somewhere permanent, with a folder picker if you want to choose.
+
+Decline and it runs in **test mode**: full protection for this session, but it
+cannot register to start with Windows, and the sidebar says so. That's the only
+thing test mode takes away.
+
 **ClipGuard is a tray app, so "nothing appeared" is often correct.** First launch
 runs setup and then opens the window. Every launch after that respects *Launch
 minimized to tray*, which setup defaults to **on**, so it starts with no window.

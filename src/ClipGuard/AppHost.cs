@@ -21,9 +21,9 @@ public sealed class AppHost : IDisposable
     private MainWindow? _main;
     private TrayFlyoutWindow? _flyout;
 
-    public AppHost()
+    public AppHost(bool testMode = false)
     {
-        _protection = new ProtectionService();
+        _protection = new ProtectionService { IsTestMode = testMode };
         _vm = new MainViewModel(_protection);
         _notifications = new NotificationService(_protection);
         _pasteGuard = new PasteGuardService(_protection);

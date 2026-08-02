@@ -102,7 +102,8 @@
               <StackPanel Margin="10,0,0,0">
                 <TextBlock Text="{Binding Protection.StatusTitle}"
                            FontWeight="SemiBold" FontSize="11.5" />
-                <TextBlock Text="v1.0.0 · SandSlide" FontSize="10.5"
+                <TextBlock Text="{Binding Protection.StatusDetail}" FontSize="10.5"
+                           TextWrapping="Wrap"
                            Foreground="{StaticResource Neutral600}" />
               </StackPanel>
             </StackPanel>

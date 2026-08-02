@@ -1,5 +1,6 @@
 using System.Windows;
 using ClipGuard.Services;
+using ClipGuard.Views;
 
 namespace ClipGuard;
 
@@ -15,10 +16,20 @@ public partial class App : Application
     private AppHost? _host;
     private Mutex? _instanceMutex;
     private EventWaitHandle? _showWindowSignal;
+    private bool _testMode;
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // Tidy away the copy we were relaunched from, if any.
+        var movedFrom = ValueAfter(e.Args, "--moved-from");
+        if (movedFrom is not null) Services.InstallLocation.CleanUpPrevious(movedFrom);
+
+        // Deliberately before the single-instance mutex: relocating starts a new
+        // copy of ClipGuard, and that copy must be able to take the mutex while
+        // this process is still shutting down.
+        if (!ResolveInstallLocation()) return;
 
         _instanceMutex = new Mutex(initiallyOwned: true, InstanceMutexName, out var isFirstInstance);
 
@@ -40,8 +51,38 @@ public partial class App : Application
         StartShowWindowListener();
         InstallCrashHandlers();
 
-        _host = new AppHost();
+        _host = new AppHost(_testMode);
         _host.Start(e.Args);
+    }
+
+    /// <summary>
+    /// True to carry on starting. False when this process has handed over to a
+    /// copy somewhere permanent and should exit.
+    /// </summary>
+    private bool ResolveInstallLocation()
+    {
+        var problem = Services.InstallLocation.Diagnose();
+        if (problem == LocationProblem.None) return true;
+
+        var window = new RelocateWindow(problem);
+        window.ShowDialog();
+
+        if (window.Choice == RelocateChoice.Moved)
+        {
+            Shutdown();
+            return false;
+        }
+
+        // Declined. Protection still runs for this session, but nothing may
+        // write a startup entry pointing at a path that won't be there.
+        _testMode = true;
+        return true;
+    }
+
+    private static string? ValueAfter(string[] args, string flag)
+    {
+        var index = Array.FindIndex(args, a => string.Equals(a, flag, StringComparison.OrdinalIgnoreCase));
+        return index >= 0 && index + 1 < args.Length ? args[index + 1] : null;
     }
 
     /// <summary>

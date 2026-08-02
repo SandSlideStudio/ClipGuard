@@ -24,10 +24,13 @@
           </Grid.ColumnDefinitions>
           <StackPanel Grid.Column="0" Margin="0,0,20,0">
             <TextBlock Text="Start ClipGuard with Windows" FontWeight="SemiBold" FontSize="13" />
-            <TextBlock Text="Recommended: protection from the moment you log in"
-                       FontSize="11.5" Margin="0,2,0,0" Foreground="{StaticResource Neutral600}" />
+            <TextBlock x:Name="StartupCaption"
+                       Text="Recommended: protection from the moment you log in"
+                       FontSize="11.5" Margin="0,2,0,0" Foreground="{StaticResource Neutral600}"
+                       TextWrapping="Wrap" />
           </StackPanel>
-          <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitch}"
+          <ToggleButton x:Name="StartupToggle" Grid.Column="1"
+                        Style="{StaticResource ToggleSwitch}"
                         VerticalAlignment="Center"
                         IsChecked="{Binding Protection.Settings.StartWithWindows, Mode=TwoWay}"
                         Click="OnSettingChanged" />
