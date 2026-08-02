@@ -16,12 +16,12 @@ public enum EventCategory
 {
     ClipboardRead,
     ClipboardWrite,
-    /// <summary>Content replaced shortly after a user copy — the classic swap.</summary>
+    /// <summary>Content replaced shortly after a user copy - the classic swap.</summary>
     ContentSubstitution,
     /// <summary>Substituted content looked like a shell command.</summary>
     CommandInjection,
     /// <summary>
-    /// Dangerous content arrived without replacing anything — the ClickFix /
+    /// Dangerous content arrived without replacing anything - the ClickFix /
     /// fake-CAPTCHA pattern, where the page just hands you a command to paste.
     /// </summary>
     SuspiciousContent
@@ -46,7 +46,7 @@ public sealed class ClipboardEvent
     /// <summary>Truncated, single-line preview of the clipboard content.</summary>
     public string ContentPreview { get; init; } = string.Empty;
 
-    /// <summary>What the content was before it got swapped — only set on substitutions.</summary>
+    /// <summary>What the content was before it got swapped - only set on substitutions.</summary>
     public string? ReplacedPreview { get; init; }
 
     public bool Blocked { get; init; }
@@ -78,13 +78,13 @@ public sealed class ClipboardEvent
         Timestamp = Timestamp
     };
 
-    // ── Display helpers used by the views — computed, never persisted ──────
+    // ── Display helpers used by the views - computed, never persisted ──────
 
     /// <summary>The grey action text next to the process name, per the mocks.</summary>
     [JsonIgnore]
     public string ActionText => (Action, Blocked) switch
     {
-        (ClipboardAction.Write, true) => "wrote to clipboard — blocked",
+        (ClipboardAction.Write, true) => "wrote to clipboard, blocked",
         (ClipboardAction.Write, false) => "wrote to clipboard",
         _ => "read clipboard"
     };
@@ -107,7 +107,7 @@ public sealed class ClipboardEvent
 
     /// <summary>
     /// The user told us this was fine. Settable because it's recorded after the
-    /// fact, and it's the only ground truth we have about false positives —
+    /// fact, and it's the only ground truth we have about false positives -
     /// every other signal is inference.
     /// </summary>
     public bool UserOverrode { get; set; }

@@ -23,7 +23,7 @@ public partial class TrayFlyoutWindow : Window
         var work = Screen.PrimaryScreen?.WorkingArea
                    ?? new System.Drawing.Rectangle(0, 0, 1920, 1080);
 
-        // Measure before positioning — SizeToContent means Height isn't known yet.
+        // Measure before positioning - SizeToContent means Height isn't known yet.
         Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
         UpdateLayout();
 

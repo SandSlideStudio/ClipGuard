@@ -32,7 +32,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     /// <summary>
     /// Rebuilt rather than fixed, because the History subtitle quotes the
-    /// retention setting — hardcoding "7 days" there made the two disagree the
+    /// retention setting - hardcoding "7 days" there made the two disagree the
     /// moment anyone changed it.
     /// </summary>
     public IReadOnlyList<TabDefinition> Tabs => BuildTabs();
@@ -70,7 +70,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public string TabTitle => Tabs[SelectedTabIndex].Label;
     public string TabSubtitle => Tabs[SelectedTabIndex].Subtitle;
 
-    /// <summary>Latest events shown on the dashboard — the mock caps this at four.</summary>
+    /// <summary>Latest events shown on the dashboard - the mock caps this at four.</summary>
     public IEnumerable<ClipboardEvent> LatestEvents => Protection.Events.Take(4);
 
     public bool HasEvents => Protection.Events.Count > 0;

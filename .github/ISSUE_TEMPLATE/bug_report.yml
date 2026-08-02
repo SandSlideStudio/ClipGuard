@@ -1,0 +1,64 @@
+name: Bug report
+description: Something is broken or behaves oddly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing, two things that are working as intended:
+
+        - **No window on launch.** ClipGuard starts minimised to the tray by
+          default. Look for the red shield, possibly behind the `^` chevron.
+        - **SmartScreen warns on first run.** Releases are unsigned. See the
+          README for how to verify a download instead.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: ClipGuard version
+      description: From the About tab
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Run `winver`, e.g. Windows 11 24H2
+    validations:
+      required: true
+
+  - type: textarea
+    id: crash
+    attributes:
+      label: Crash log, if there is one
+      description: |
+        If Settings has "Save crash reports to disk" enabled, look in
+        `%LOCALAPPDATA%\ClipGuard\logs`. These contain exception text only,
+        never clipboard content.
+      render: text

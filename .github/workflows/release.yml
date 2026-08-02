@@ -1,0 +1,90 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build (e.g. v1.0.0)'
+        required: true
+
+permissions:
+  contents: write
+  # Required for build provenance. ClipGuard ships unsigned, so an attestation
+  # tying the binary to the commit and workflow that produced it is the closest
+  # free equivalent of a code-signing certificate.
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # publish.ps1 runs the tests first and refuses to build if any fail, so a
+      # release can never ship logic that didn't pass.
+      - name: Build and test
+        shell: pwsh
+        run: ./build/publish.ps1
+
+      - name: Check the version matches the tag
+        shell: pwsh
+        run: |
+          $tag = if ('${{ github.event_name }}' -eq 'workflow_dispatch') {
+            '${{ inputs.tag }}'
+          } else {
+            '${{ github.ref_name }}'
+          }
+          $expected = $tag.TrimStart('v')
+          $csproj = Get-Content ./src/ClipGuard/ClipGuard.csproj -Raw
+          $actual = [regex]::Match($csproj, '<Version>([^<]+)</Version>').Groups[1].Value
+          if ($actual -ne $expected) {
+            throw "Tag $tag expects version $expected but the project says $actual."
+          }
+          Write-Host "Version $actual matches tag $tag"
+
+      - name: Checksums
+        shell: pwsh
+        run: |
+          $exe = './dist/win-x64/ClipGuard.exe'
+          $hash = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLower()
+          "$hash  ClipGuard.exe" | Out-File ./dist/SHA256SUMS.txt -Encoding ascii
+          Write-Host "SHA-256: $hash"
+
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: ./dist/win-x64/ClipGuard.exe
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/win-x64/ClipGuard.exe
+            dist/SHA256SUMS.txt
+          generate_release_notes: true
+          body: |
+            ## Verifying this download
+
+            ClipGuard is **unsigned**, so Windows SmartScreen will warn on first
+            run. Signing certificates cost money this project doesn't make.
+            Verify the download instead:
+
+            **Checksum** compare against `SHA256SUMS.txt`:
+            ```powershell
+            Get-FileHash ClipGuard.exe -Algorithm SHA256
+            ```
+
+            **Provenance** confirm it was built by this repo, from this commit:
+            ```bash
+            gh attestation verify ClipGuard.exe --repo ${{ github.repository }}
+            ```
+
+            That proves the binary came from the source you can read here, which
+            is the thing a certificate would otherwise be vouching for.

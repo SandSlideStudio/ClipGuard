@@ -16,8 +16,8 @@ public enum NotificationKind
     /// <summary>High-risk swap. Large sticky card showing the before/after diff.</summary>
     HighRiskSwap,
     /// <summary>
-    /// Dangerous content arrived without replacing anything. Not blocked — you
-    /// may have copied it on purpose — but sticky, because the ClickFix attack
+    /// Dangerous content arrived without replacing anything. Not blocked - you
+    /// may have copied it on purpose - but sticky, because the ClickFix attack
     /// looks exactly like this.
     /// </summary>
     ContentWarning,
@@ -37,7 +37,7 @@ public sealed class NotificationRequest
 /// <summary>
 /// The brain. Turns raw clipboard changes into events, decides what to block,
 /// restores originals, and owns protection state. Everything here runs on the
-/// UI thread — clipboard APIs are STA-bound and the volumes are tiny.
+/// UI thread - clipboard APIs are STA-bound and the volumes are tiny.
 /// </summary>
 public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
 {
@@ -63,7 +63,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
     private int _eventCounter;
 
     /// <summary>
-    /// Full text of content we withheld — blocked swaps and defused commands —
+    /// Full text of content we withheld - blocked swaps and defused commands -
     /// keyed by event id, so "give it back" restores it verbatim. Held in memory
     /// only: this is content we just judged hostile, and it has no business
     /// being written to disk.
@@ -105,7 +105,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
 
     /// <summary>
     /// Download hosts the user has personally vouched for by overriding a
-    /// warning. Visible and removable — unlike the internal ignore list, this
+    /// warning. Visible and removable - unlike the internal ignore list, this
     /// one weakens protection, so it must never be invisible.
     /// </summary>
     public ObservableCollection<string> TrustedSources { get; }
@@ -126,9 +126,9 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
                                : "Standing guard";
 
     public string StatusSub => !IsHealthy
-        ? "ClipGuard couldn't attach to the clipboard. Restart it — you are not protected."
+        ? "ClipGuard couldn't attach to the clipboard. Restart it: you are not protected."
         : IsPaused
-            ? $"Protection paused — back on duty in {RemainingPauseText}"
+            ? $"Protection paused, back on duty in {RemainingPauseText}"
             : $"Watching clipboard access from apps · {EventsToday} events today";
 
     public string PauseCta => IsPaused ? "Resume now" : "Pause 15 min";
@@ -222,7 +222,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
         var foregroundPid = Win32.GetProcessIdForWindow(e.ForegroundWindow);
         var ownerPid = Win32.GetProcessIdForWindow(e.OwnerWindow);
 
-        // Our own writes — restores, defused stand-ins, Clear clipboard — are
+        // Our own writes - restores, defused stand-ins, Clear clipboard - are
         // never events. ClipboardMonitor already swallows the echo by content;
         // this catches the cases it can't, like an echo arriving late or the
         // content not matching what we wrote.
@@ -240,7 +240,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
         // the strongest signal available without a keyboard hook.
         var background = ownerPid != 0 && foregroundPid != 0 && ownerPid != foregroundPid;
 
-        // The decision itself is a pure function — see DetectionPolicy. This
+        // The decision itself is a pure function - see DetectionPolicy. This
         // method's job is gathering the inputs and applying the consequences.
         var outcome = DetectionPolicy.Evaluate(new DetectionInputs
         {
@@ -295,7 +295,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
             Category = outcome.Category,
             // Blank rows read as broken in History; say what actually happened.
             ContentPreview = string.IsNullOrEmpty(e.Text)
-                ? "(image or file — not text)"
+                ? "(image or file, not text)"
                 : RiskAnalyzer.Preview(e.Text),
             ReplacedPreview = shouldBlock ? RiskAnalyzer.Preview(previous) : null,
             Blocked = shouldBlock,
@@ -330,11 +330,11 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
     /// <summary>
     /// Whether newly-arrived content is worth warning about on its own merits.
     /// Shell commands always are. Wallet addresses only when a browser put them
-    /// there — you copying an address from your own wallet is routine, a web
+    /// there - you copying an address from your own wallet is routine, a web
     /// page placing one on your clipboard is not.
     /// </summary>
     /// <summary>
-    /// Writers whose clipboard activity is never surfaced — no notification, no
+    /// Writers whose clipboard activity is never surfaced - no notification, no
     /// history entry. Hardcoded and deliberately not user-editable: this is
     /// plumbing, not a rule someone should be able to add their own entries to.
     /// </summary>
@@ -348,7 +348,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
     ///
     /// Identity is checked by process id, which nothing can spoof. The name list
     /// is only a fallback for when the owner window won't resolve to a pid, and
-    /// even then the image path has to match ours — otherwise malware could
+    /// even then the image path has to match ours - otherwise malware could
     /// rename itself to ClipGuard.exe and buy permanent silence.
     /// </summary>
     private static bool IsIgnoredWriter(ProcessIdentity writer, uint ownerPid)
@@ -389,7 +389,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
             Timestamp = DateTimeOffset.Now
         };
 
-        // Logged even when notifications are off — a near-miss on a terminal
+        // Logged even when notifications are off - a near-miss on a terminal
         // paste is exactly the thing you want to find in the history later.
         RecordEvent(record);
 
@@ -452,7 +452,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
 
     private void TrustSourcesIn(string commandText)
     {
-        // A lure is malicious regardless of who hosts it — never learn from one.
+        // A lure is malicious regardless of who hosts it - never learn from one.
         if (RiskAnalyzer.IsVerificationLure(commandText)) return;
 
         var added = false;
@@ -550,7 +550,7 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
     private void SaveRules() => Storage.Save(RulesFile, Rules.ToList());
 
     /// <summary>
-    /// Hand back content we withheld — a blocked swap or a defused command.
+    /// Hand back content we withheld - a blocked swap or a defused command.
     /// Uses the full text held in memory: ContentPreview is truncated for
     /// display, and restoring that would return mangled content.
     /// </summary>

@@ -148,7 +148,7 @@
               </Grid.ColumnDefinitions>
               <StackPanel Grid.Column="0" Margin="0,0,20,0">
                 <TextBlock Text="Start ClipGuard with Windows" FontWeight="SemiBold" FontSize="13" />
-                <TextBlock Text="Recommended — protection from the moment you log in"
+                <TextBlock Text="Recommended: protection from the moment you log in"
                            FontSize="11.5" Margin="0,2,0,0" Foreground="{StaticResource Neutral600}" />
               </StackPanel>
               <ToggleButton x:Name="PrefStartup" Grid.Column="1" Style="{StaticResource ToggleSwitch}"
@@ -196,7 +196,7 @@
               </Grid.ColumnDefinitions>
               <StackPanel Grid.Column="0" Margin="0,0,20,0">
                 <TextBlock Text="Send anonymous crash reports" FontWeight="SemiBold" FontSize="13" />
-                <TextBlock Text="Helps SandSlide fix bugs — never includes clipboard content"
+                <TextBlock Text="Helps SandSlide fix bugs. Never includes clipboard content"
                            FontSize="11.5" Margin="0,2,0,0" Foreground="{StaticResource Neutral600}" />
               </StackPanel>
               <ToggleButton x:Name="PrefCrash" Grid.Column="1" Style="{StaticResource ToggleSwitch}"

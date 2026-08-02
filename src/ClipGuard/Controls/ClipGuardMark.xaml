@@ -1,7 +1,7 @@
 <!--
   The ClipGuard mark. Static by default: a paperclip held inside a shield.
 
-  Set IsAnimating to play the interception — a hostile write arrives, the shield
+  Set IsAnimating to play the interception - a hostile write arrives, the shield
   braces, and it's turned away. That belongs to loading and waiting states, not
   to the mark itself, so the threat block is collapsed unless asked for.
 -->

@@ -1,0 +1,52 @@
+name: Missed detection
+description: Something hostile got through
+labels: [missed-detection]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **If this is exploitable, don't open an issue.** Use
+        [private vulnerability reporting](https://github.com/SandSlideStudio/ClipGuard/security/advisories/new)
+        instead so it stays confidential until there's a fix. See
+        [SECURITY.md](https://github.com/SandSlideStudio/ClipGuard/blob/main/SECURITY.md).
+
+        Use this template for gaps that are already public knowledge, such as a
+        ClickFix variant doing the rounds.
+
+  - type: textarea
+    id: content
+    attributes:
+      label: What got through
+      description: The payload or swap. Replace real domains with example.test.
+      render: shell
+    validations:
+      required: true
+
+  - type: dropdown
+    id: shape
+    attributes:
+      label: Which kind was it
+      options:
+        - A swap, something replaced what I copied
+        - A command handed to me, nothing replaced (ClickFix style)
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: |
+        Timing matters. Swap detection needs the replacement within 2.5 seconds
+        of your copy, so note roughly how long the gap was and whether the app
+        that wrote it was the one you were looking at.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: ClipGuard version
+    validations:
+      required: true

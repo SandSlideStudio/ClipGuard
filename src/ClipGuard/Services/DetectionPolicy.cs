@@ -43,7 +43,7 @@ public sealed record DetectionOutcome
     /// </summary>
     public bool HighRiskSwap { get; init; }
 
-    /// <summary>Severity recorded on the event — a severe swap, or a lure.</summary>
+    /// <summary>Severity recorded on the event - a severe swap, or a lure.</summary>
     public bool HighRisk { get; init; }
 
     public EventCategory Category { get; init; }
@@ -76,8 +76,8 @@ public static class DetectionPolicy
         var changed = !string.Equals(previous, text, StringComparison.Ordinal);
         var riskShaped = RiskAnalyzer.Classify(text) != RiskKind.None;
 
-        // A swap that keeps the *shape* of what you copied — an address for a
-        // different address, a command for a different command — is the
+        // A swap that keeps the *shape* of what you copied - an address for a
+        // different address, a command for a different command - is the
         // signature of the attack, and the only signal strong enough to act on
         // when the writer is the focused app. That's the case that matters: a
         // malicious page rewriting the clipboard inside your own browser.
@@ -85,7 +85,7 @@ public static class DetectionPolicy
                            && RiskAnalyzer.Classify(previous) != RiskKind.None
                            && RiskAnalyzer.Classify(previous) == RiskAnalyzer.Classify(text);
 
-        // Substitution needs prior content plus two corroborating signals — any
+        // Substitution needs prior content plus two corroborating signals - any
         // one alone produces far too many false positives in normal use.
         // Non-text content is logged but never judged: we can't read it, so
         // there's nothing to reason about.
@@ -107,7 +107,7 @@ public static class DetectionPolicy
                     && (blockedByRule
                         || (substitution && !allowedByRule && !trustedSource));
 
-        // Nothing was replaced, but something dangerous just landed — the
+        // Nothing was replaced, but something dangerous just landed - the
         // ClickFix shape, where a page hands you a command to paste. Warn
         // without blocking: you may have copied it deliberately.
         var warn = !block
@@ -141,7 +141,7 @@ public static class DetectionPolicy
 
     /// <summary>
     /// Whether content is worth warning about on its own merits. Shell commands
-    /// always are. Wallet addresses only when a browser put them there — copying
+    /// always are. Wallet addresses only when a browser put them there - copying
     /// an address from your own wallet is routine, a web page placing one on
     /// your clipboard unprompted is not.
     /// </summary>

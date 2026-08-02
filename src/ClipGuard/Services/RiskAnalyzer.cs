@@ -5,7 +5,7 @@ namespace ClipGuard.Services;
 public enum RiskKind
 {
     None,
-    /// <summary>A wallet address — the classic swap target.</summary>
+    /// <summary>A wallet address - the classic swap target.</summary>
     CryptoAddress,
     /// <summary>A shell command, especially a download-and-execute pipeline.</summary>
     ShellCommand
@@ -93,11 +93,11 @@ public static partial class RiskAnalyzer
     //
     // HARD RULE: templates are fixed constants, selected by the *shape* of the
     // original. Never build a replacement by transforming attacker-supplied
-    // text — splicing fragments risks putting live payload back on the
+    // text - splicing fragments risks putting live payload back on the
     // clipboard, which is the exact failure this feature exists to prevent.
 
     /// <summary>
-    /// Windows shape — the ClickFix mainstream (Run dialog, cmd, PowerShell).
+    /// Windows shape - the ClickFix mainstream (Run dialog, cmd, PowerShell).
     /// Write-Verbose prints nothing unless verbose output is switched on, so
     /// this exits 0 in silence. In the Run dialog a console flashes and closes,
     /// which reads as "it ran" rather than as an error.
@@ -106,7 +106,7 @@ public static partial class RiskAnalyzer
     /// Contains no <c>$</c> and no backtick, and that is load-bearing. Pasting
     /// into a PowerShell prompt makes the *outer* shell expand the double-quoted
     /// argument before the child process sees it, so a <c>$var</c> here would
-    /// vanish and leave a syntax error on screen — precisely the "your paste
+    /// vanish and leave a syntax error on screen - precisely the "your paste
     /// failed" tell the disguise exists to avoid.
     /// </remarks>
     private const string DefusedPowerShell =
@@ -136,7 +136,7 @@ public static partial class RiskAnalyzer
 
     /// <summary>
     /// Picks the inert stand-in that best resembles the original's shape.
-    /// Takes the payload only to classify it — never to copy from it.
+    /// Takes the payload only to classify it - never to copy from it.
     /// </summary>
     public static string DefusedReplacementFor(string? original)
     {
@@ -156,7 +156,7 @@ public static partial class RiskAnalyzer
     //
     // `irm https://ollama.com/install.ps1 | iex` and a ClickFix payload are the
     // same shape. No pattern can separate them, because as text they aren't
-    // different — the difference is where the code comes from. So the one
+    // different - the difference is where the code comes from. So the one
     // durable signal is the download host.
 
     [GeneratedRegex(@"https?://([A-Za-z0-9][A-Za-z0-9\-.]*[A-Za-z0-9])",
@@ -167,7 +167,7 @@ public static partial class RiskAnalyzer
     /// Vendor-controlled install endpoints. Deliberately narrow: only hosts
     /// whose owner decides what is served there.
     ///
-    /// Redirectors and user-content hosts are excluded on purpose — aka.ms,
+    /// Redirectors and user-content hosts are excluded on purpose - aka.ms,
     /// raw.githubusercontent.com and gist.github.com would each let an attacker
     /// serve a payload from an allowlisted name.
     /// </summary>
@@ -254,7 +254,7 @@ public static partial class RiskAnalyzer
 
     /// <summary>
     /// A shell command carrying fake verification text. This is the ClickFix
-    /// signature and has no legitimate explanation — nothing you genuinely need
+    /// signature and has no legitimate explanation - nothing you genuinely need
     /// to run comes with a reCAPTCHA note attached.
     /// </summary>
     public static bool IsVerificationLure(string? value) =>

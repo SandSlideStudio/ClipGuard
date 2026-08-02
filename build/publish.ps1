@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Produces a self-contained win-x64 build so the machine needs no .NET
-    install — for a tray app people are meant to install once and forget,
+    install - for a tray app people are meant to install once and forget,
     a runtime prerequisite is a support burden.
 
     Signing is a separate step and needs a certificate you supply. See the

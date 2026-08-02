@@ -44,8 +44,8 @@ public partial class SetupWindow : Window
 
     private string BodyFor(int step) => step switch
     {
-        0 => "Apps and web pages can read and rewrite your clipboard — a wallet address, a command, "
-             + "a link — sometimes swapping it for something nastier. ClipGuard sits in your system tray "
+        0 => "Apps and web pages can read and rewrite your clipboard: a wallet address, a command, "
+             + "a link, sometimes swapping it for something nastier. ClipGuard sits in your system tray "
              + "and tells you the moment something touches it. Setup takes under a minute.",
         1 => "Scroll through, tick the box, and we're off. Summary: everything runs locally, we never "
              + "see your clipboard, and no security software is perfect.",

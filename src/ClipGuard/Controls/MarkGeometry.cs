@@ -4,7 +4,7 @@ using System.Windows.Media;
 namespace ClipGuard.Controls;
 
 /// <summary>
-/// The ClipGuard mark — "Interception". A paperclip held inside a shield.
+/// The ClipGuard mark - "Interception". A paperclip held inside a shield.
 ///
 /// This is the single definition. The WPF control, the tray icon and
 /// build/make-icon.ps1 all read from here (the script extracts the path strings
@@ -21,7 +21,7 @@ public static class MarkGeometry
 
     /// <summary>
     /// The clip, knocked out of the shield. Stroked rather than filled, so it
-    /// reads as a bent wire — a paperclip is one folded piece of metal.
+    /// reads as a bent wire - a paperclip is one folded piece of metal.
     ///
     /// The three verticals sit 2.6 apart against a 1.15 stroke, leaving gaps
     /// slightly wider than the wire itself. That ratio is what makes it read as
@@ -38,7 +38,7 @@ public static class MarkGeometry
     ///
     /// Below roughly 24px the three-wire clip's gaps fall under a pixel and the
     /// knockout closes into a grey smudge. Dropping the middle wire doubles the
-    /// gap to 4.4, which still reads at 16px — the size this mark spends most of
+    /// gap to 4.4, which still reads at 16px - the size this mark spends most of
     /// its life at, in the tray and on the one-line toast.
     /// </summary>
     public const string SimpleClipPath =
@@ -52,7 +52,7 @@ public static class MarkGeometry
     /// <summary>Canvas the paths are authored against.</summary>
     public const double Extent = 24;
 
-    /// <summary>The intercepted write. Animation only — never part of the static mark.</summary>
+    /// <summary>The intercepted write. Animation only - never part of the static mark.</summary>
     public static readonly Rect ThreatRect = new(19.8, 10.4, 3.2, 3.2);
     public const double ThreatRadius = 0.5;
 

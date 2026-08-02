@@ -1,0 +1,57 @@
+name: False positive
+description: ClipGuard blocked, warned about or defused something legitimate
+labels: [false-positive]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These are the most useful reports the project gets. Detection is
+        heuristic, and the only ground truth about what's a false positive
+        comes from people telling us.
+
+        **Don't paste anything sensitive.** If the content was a real wallet
+        address or a private URL, redact it and describe the shape instead.
+
+  - type: textarea
+    id: content
+    attributes:
+      label: What was on the clipboard
+      description: The command or content that got flagged. Redact anything private.
+      render: shell
+    validations:
+      required: true
+
+  - type: dropdown
+    id: verdict
+    attributes:
+      label: What ClipGuard did
+      options:
+        - Blocked it and restored my previous clipboard
+        - Warned but left it alone
+        - Defused it, replaced with a stand-in
+        - Warned me before pasting into a terminal
+    validations:
+      required: true
+
+  - type: input
+    id: app
+    attributes:
+      label: Which app put it there
+      description: Shown in the History tab, e.g. chrome.exe
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened, and why it was legitimate
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: ClipGuard version
+      description: From the About tab
+    validations:
+      required: true

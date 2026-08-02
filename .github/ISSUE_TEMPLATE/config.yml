@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/SandSlideStudio/ClipGuard/security/advisories/new
+    about: Anything exploitable goes here, privately, not in a public issue.
+  - name: SandSlide Studio
+    url: https://sandslide.studio
+    about: The people who made this.

@@ -5,7 +5,7 @@ namespace ClipGuard.Tests;
 /// <summary>
 /// Points Storage at a throwaway directory before anything touches it.
 /// Storage.Root is resolved in a static initialiser, so this has to run before
-/// the first access — a module initialiser is the only hook early enough.
+/// the first access - a module initialiser is the only hook early enough.
 /// Without it the suite would read and overwrite the real install's history.
 /// </summary>
 internal static class TestDataDirectory

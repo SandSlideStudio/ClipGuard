@@ -54,7 +54,7 @@ public partial class NotificationWindow : Window
                     : _event.ReplacedPreview;
                 DiffReplacement.Text = _event.ContentPreview;
                 ConfigureHighRiskActions();
-                // Sticky by design — no timer.
+                // Sticky by design - no timer.
                 break;
 
             case NotificationKind.ContentWarning:
@@ -67,7 +67,7 @@ public partial class NotificationWindow : Window
 
             case NotificationKind.PasteWarning:
                 ShowWarning(
-                    title: "Hold on — don't paste that here.",
+                    title: "Hold on. Don't paste that here.",
                     body: BuildPasteWarningBody(request.TargetApp));
                 break;
         }
@@ -75,7 +75,7 @@ public partial class NotificationWindow : Window
 
     /// <summary>
     /// Tailors the high-risk actions. Blocking a browser would stop every copy
-    /// you make from it, so that option simply isn't offered there — the useful
+    /// you make from it, so that option simply isn't offered there - the useful
     /// response to a hostile page is keeping your original, not disabling Chrome.
     /// </summary>
     private void ConfigureHighRiskActions()
@@ -131,12 +131,12 @@ public partial class NotificationWindow : Window
 
     private void OnWarnSecondary(object sender, RoutedEventArgs e)
     {
-        // Either way this is the user telling us we were wrong — the only
+        // Either way this is the user telling us we were wrong - the only
         // labelled false positive we ever get. Record it before acting.
         _protection.RecordOverride(_event);
 
         // Defused: hand the real command back. Otherwise they meant to copy it,
-        // and it's still on the clipboard — nothing to do but dismiss.
+        // and it's still on the clipboard - nothing to do but dismiss.
         if (_event.Defused) _protection.RestoreWithheldWrite(_event);
         Dismiss();
     }
@@ -161,7 +161,7 @@ public partial class NotificationWindow : Window
             : $"{(ProtectionService.IsBrowser(_event.ProcessName) ? $"A page in {_event.ProcessName}" : _event.ProcessName)} "
             + "put a command on your clipboard that downloads and runs code from the internet.";
 
-        // Say plainly that the danger is already gone — that's the reassurance
+        // Say plainly that the danger is already gone - that's the reassurance
         // worth leading with once it's been defused.
         var outcome = _event.Defused
             ? " I've taken it off your clipboard and left something harmless in its place, so "
@@ -177,7 +177,7 @@ public partial class NotificationWindow : Window
 
         return $"You're about to paste into {target}, and there's a download-and-run command "
              + "on your clipboard. If a website told you to do this to prove you're human, "
-             + "it's an attack — clear it instead.";
+             + "it's an attack. Clear it instead.";
     }
 
     private DispatcherTimer StartDismissTimer(TimeSpan lifetime)
@@ -221,7 +221,7 @@ public partial class NotificationWindow : Window
         Dismiss();
     }
 
-    /// <summary>"Actually I need that" — hand back what we withheld.</summary>
+    /// <summary>"Actually I need that" - hand back what we withheld.</summary>
     private void OnRestore(object sender, RoutedEventArgs e)
     {
         _protection.RecordOverride(_event);

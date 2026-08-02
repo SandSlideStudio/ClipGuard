@@ -38,7 +38,7 @@ public sealed class AppSettings
     /// <summary>
     /// Whether previews of copied content are written to disk at all. On, they
     /// are stored DPAPI-encrypted; off, history keeps the app and verdict but
-    /// never the content — the strongest option for anyone who copies secrets.
+    /// never the content - the strongest option for anyone who copies secrets.
     /// </summary>
     public bool RememberCopiedContent { get; set; } = true;
 
@@ -48,7 +48,7 @@ public sealed class AppSettings
     /// <summary>False until the first-run wizard completes.</summary>
     public bool SetupCompleted { get; set; }
 
-    // Derived from the enums above — computed, never persisted.
+    // Derived from the enums above - computed, never persisted.
 
     [JsonIgnore]
     public TimeSpan? AutoClearDelay => AutoClear switch

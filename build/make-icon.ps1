@@ -5,7 +5,7 @@
 .DESCRIPTION
     Reads the shield and clip paths straight out of MarkGeometry.cs rather than
     keeping its own copy, so the app icon, the tray icon and the in-app control
-    are all the same drawing. Rendering goes through WPF for the same reason —
+    are all the same drawing. Rendering goes through WPF for the same reason -
     redrawing the mark in GDI+ would be a second implementation to keep in sync.
 
     Re-run after changing the mark. CI fails if the committed .ico is stale.

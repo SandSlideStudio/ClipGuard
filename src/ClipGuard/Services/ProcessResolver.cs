@@ -11,7 +11,7 @@ public readonly record struct ProcessIdentity(string Name, string? Path, string?
 
 /// <summary>
 /// Turns a window handle into something we can name in the UI. Results are
-/// cached per image path — version-info lookups hit disk.
+/// cached per image path - version-info lookups hit disk.
 /// </summary>
 public sealed class ProcessResolver
 {
@@ -25,7 +25,7 @@ public sealed class ProcessResolver
         var path = Win32.GetProcessImagePath(pid);
         if (path is null)
         {
-            // Fall back to the managed API — works for same-bitness, same-user processes.
+            // Fall back to the managed API - works for same-bitness, same-user processes.
             try
             {
                 using var p = Process.GetProcessById((int)pid);

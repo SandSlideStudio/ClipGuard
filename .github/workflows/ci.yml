@@ -56,7 +56,7 @@ jobs:
         run: ./build/publish.ps1
 
       # NOTE: the artifact is unsigned. Signing needs a certificate on a
-      # hardware token or cloud HSM — see "Packaging and signing" in README.md.
+      # hardware token or cloud HSM - see "Packaging and signing" in README.md.
       - uses: actions/upload-artifact@v4
         with:
           name: clipguard-unsigned-win-x64

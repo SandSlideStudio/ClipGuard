@@ -24,7 +24,7 @@
           </Grid.ColumnDefinitions>
           <StackPanel Grid.Column="0" Margin="0,0,20,0">
             <TextBlock Text="Start ClipGuard with Windows" FontWeight="SemiBold" FontSize="13" />
-            <TextBlock Text="Recommended — protection from the moment you log in"
+            <TextBlock Text="Recommended: protection from the moment you log in"
                        FontSize="11.5" Margin="0,2,0,0" Foreground="{StaticResource Neutral600}" />
           </StackPanel>
           <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitch}"
@@ -155,10 +155,10 @@
           </Grid.ColumnDefinitions>
           <StackPanel Grid.Column="0" Margin="0,0,20,0">
             <!-- The mock said "Send anonymous crash reports". Nothing is sent
-                 anywhere — that would be the one exception to "stays on this
-                 machine" — so the label says what it actually does. -->
+                 anywhere - that would be the one exception to "stays on this
+                 machine" - so the label says what it actually does. -->
             <TextBlock Text="Save crash reports to disk" FontWeight="SemiBold" FontSize="13" />
-            <TextBlock Text="Writes fault details to a local log folder — never includes clipboard content"
+            <TextBlock Text="Writes fault details to a local log folder. Never includes clipboard content"
                        FontSize="11.5" Margin="0,2,0,0" Foreground="{StaticResource Neutral600}"
                        TextWrapping="Wrap" />
           </StackPanel>
@@ -226,13 +226,13 @@
         </Grid>
       </Border>
 
-      <!-- How protection actually works — the footnote the desktop tier owes the user. -->
+      <!-- How protection actually works - the footnote the desktop tier owes the user. -->
       <Border Style="{StaticResource Panel}" Padding="14,12" Margin="0,10,0,0">
         <StackPanel>
           <TextBlock Text="HOW BLOCKING WORKS" Style="{StaticResource CapsLabel}" />
           <TextBlock Margin="0,6,0,0" FontSize="11.5" TextWrapping="Wrap"
                      Foreground="{StaticResource Neutral700}"
-                     Text="ClipGuard watches the Windows clipboard and identifies the app behind each change. When it spots a swap, it puts your original content back within milliseconds — before you can paste the replacement. It can't stop the write from landing in the first place; nothing outside the browser can. Your copy survives either way." />
+                     Text="ClipGuard watches the Windows clipboard and identifies the app behind each change. When it spots a swap, it puts your original content back within milliseconds, before you can paste the replacement. It can't stop the write from landing in the first place; nothing outside the browser can. Your copy survives either way." />
         </StackPanel>
       </Border>
 

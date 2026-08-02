@@ -9,7 +9,7 @@ public partial class AboutView : UserControl
 
     /// <summary>
     /// No update service exists yet, so this reports honestly rather than
-    /// pretending to reach a server. The mark animates while it works — when a
+    /// pretending to reach a server. The mark animates while it works - when a
     /// real check lands here, the waiting state is already built.
     /// </summary>
     private async void OnCheckUpdates(object sender, RoutedEventArgs e)
@@ -21,7 +21,7 @@ public partial class AboutView : UserControl
         try
         {
             await Task.Delay(TimeSpan.FromSeconds(1.4));
-            UpdateStatus.Text = "You're on v1.4.2 — no update service yet.";
+            UpdateStatus.Text = "You're on v1.0.0. No update service yet.";
         }
         finally
         {
@@ -38,7 +38,7 @@ public partial class AboutView : UserControl
         }
         catch
         {
-            // No default browser, or the shell refused — nothing worth interrupting for.
+            // No default browser, or the shell refused - nothing worth interrupting for.
         }
     }
 }

@@ -8,12 +8,12 @@ namespace ClipGuard.Services;
 
 /// <summary>
 /// Small JSON-file store under %LOCALAPPDATA%\ClipGuard. Everything ClipGuard
-/// keeps stays on this machine — that promise is load-bearing for the product,
+/// keeps stays on this machine - that promise is load-bearing for the product,
 /// so there is deliberately no network path out of here.
 ///
 /// Files holding clipboard content are encrypted at rest with DPAPI. Without
 /// that, the event log is a plaintext record of everything the user ever copied
-/// — passwords, tokens, recovery phrases — sitting in a predictable path. A
+/// - passwords, tokens, recovery phrases - sitting in a predictable path. A
 /// clipboard security tool must not be the thing that creates that file.
 /// </summary>
 public static class Storage
@@ -23,7 +23,7 @@ public static class Storage
 
     /// <summary>
     /// Where state lives. Overridable via CLIPGUARD_DATA_DIR so tests stay
-    /// hermetic — and so a portable install can keep its data beside the exe.
+    /// hermetic - and so a portable install can keep its data beside the exe.
     /// </summary>
     public static string Root { get; } =
         Environment.GetEnvironmentVariable("CLIPGUARD_DATA_DIR") is { Length: > 0 } custom
@@ -115,7 +115,7 @@ public static class Storage
         return Encoding.UTF8.GetString(plain);
     }
 
-    /// <summary>Removes a store outright — used when the user turns off history.</summary>
+    /// <summary>Removes a store outright - used when the user turns off history.</summary>
     public static void Delete(string fileName)
     {
         try

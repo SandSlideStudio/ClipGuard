@@ -17,7 +17,7 @@
                            Knockout="{StaticResource Neutral100}"
                            ThreatFill="{StaticResource Neutral400}" />
         <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-          <TextBlock Text="ClipGuard v1.4.2" FontFamily="{StaticResource FontHeading}"
+          <TextBlock Text="ClipGuard v1.0.0" FontFamily="{StaticResource FontHeading}"
                      FontWeight="Bold" FontSize="15" />
           <TextBlock Text="by SandSlide Studio · yes, the game people"
                      FontSize="11.5" Foreground="{StaticResource Neutral600}" />
@@ -26,7 +26,7 @@
 
       <TextBlock Margin="0,12,0,0" FontSize="12" LineHeight="18.6" TextWrapping="Wrap"
                  Foreground="{StaticResource Neutral700}"
-                 Text="We got tired of apps messing with our clipboards between playtests, so we built this. Everything runs locally — your clipboard never leaves your machine." />
+                 Text="We got tired of apps messing with our clipboards between playtests, so we built this. Everything runs locally, so your clipboard never leaves your machine." />
 
       <StackPanel Orientation="Horizontal" Margin="0,14,0,0" VerticalAlignment="Center">
         <Button x:Name="UpdateButton" Content="Check for updates"

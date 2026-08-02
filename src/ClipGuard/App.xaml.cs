@@ -25,7 +25,7 @@ public partial class App : Application
         if (!isFirstInstance)
         {
             // ClipGuard lives in the tray, so launching it again reads as "show me
-            // the window" rather than "start a second copy" — two monitors would
+            // the window" rather than "start a second copy" - two monitors would
             // fight over the clipboard.
             if (EventWaitHandle.TryOpenExisting(ShowWindowSignalName, out var running))
             {
@@ -46,7 +46,7 @@ public partial class App : Application
 
     /// <summary>
     /// Without these, one unhandled exception silently kills the tray process
-    /// and protection just stops — no window, no icon, no clue. For security
+    /// and protection just stops - no window, no icon, no clue. For security
     /// software that failure mode is unacceptable: survive if we can, and say so
     /// plainly if we can't.
     /// </summary>
@@ -58,7 +58,7 @@ public partial class App : Application
                 CrashLog.Write(args.Exception, "UI thread");
 
             // A fault in one toast or view shouldn't take monitoring down with
-            // it, so keep running — but stop claiming everything is fine.
+            // it, so keep running - but stop claiming everything is fine.
             _host?.ReportFault();
             args.Handled = true;
         };

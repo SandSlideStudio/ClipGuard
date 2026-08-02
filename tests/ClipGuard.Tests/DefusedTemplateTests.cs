@@ -10,7 +10,7 @@ namespace ClipGuard.Tests;
 /// This suite exists because reasoning was wrong once: a template containing
 /// "$m" looked fine and passed every static check, but pasting it into a
 /// PowerShell prompt let the outer shell expand the variable before the child
-/// process saw it, turning the command into a visible CommandNotFoundException —
+/// process saw it, turning the command into a visible CommandNotFoundException -
 /// exactly the "your paste failed" tell the disguise is meant to avoid.
 /// </summary>
 public class DefusedTemplateTests

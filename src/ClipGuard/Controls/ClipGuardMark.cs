@@ -13,7 +13,7 @@ public partial class ClipGuardMark : UserControl
             new PropertyMetadata(new SolidColorBrush(Color.FromRgb(0x20, 0x1e, 0x1d))));
 
     /// <summary>
-    /// Colour of the clip knocked out of the shield — set this to whatever sits
+    /// Colour of the clip knocked out of the shield - set this to whatever sits
     /// behind the mark, so the clip reads as a hole rather than a drawn line.
     /// </summary>
     public static readonly DependencyProperty KnockoutProperty =

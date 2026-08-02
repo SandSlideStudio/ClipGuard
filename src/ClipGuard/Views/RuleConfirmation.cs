@@ -18,7 +18,7 @@ public static class RuleConfirmation
         if (!ProtectionService.IsBrowser(processName)) return true;
 
         var answer = MessageBox.Show(
-            $"Blocking {processName} stops every clipboard write from your browser — "
+            $"Blocking {processName} stops every clipboard write from your browser, "
             + "including the things you copy yourself. Copying from web pages will "
             + "look broken until you remove the rule.\n\n"
             + "If a page tried to swap your clipboard, keeping your original is "

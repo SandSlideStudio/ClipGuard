@@ -3,8 +3,8 @@
 **Copyright © 2026 SandSlide Studio. All rights reserved.**
 
 ClipGuard is **source-available, not open source.** The code is published so it
-can be read and audited — reasonable to ask of a tool that watches your
-clipboard — but it is not licensed for reuse.
+can be read and audited, which is reasonable to ask of a tool that watches your
+clipboard, but it is not licensed for reuse.
 
 ## What you may do
 
@@ -47,7 +47,7 @@ transmitted off the device.
 **4. No warranty.** ClipGuard is provided "as is", without warranty of any kind,
 express or implied, including but not limited to merchantability, fitness for a
 particular purpose and non-infringement. We work hard, but no security software
-catches everything — see the "Known limits" section of the README for the
+catches everything. See the "Known limits" section of the README for the
 specific gaps we know about. To the maximum extent permitted by law, SandSlide
 Studio is not liable for any claim, damages or other liability arising from the
 software or its use. Liability is limited to the amount you paid us (spoiler:
@@ -61,6 +61,6 @@ is removed with it.
 
 ---
 
-Third-party components carry their own licences — see
+Third-party components carry their own licences. See
 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). Archivo is used under the SIL
 Open Font License and its terms are not affected by anything above.

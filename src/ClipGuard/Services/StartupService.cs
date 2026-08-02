@@ -5,7 +5,7 @@ namespace ClipGuard.Services;
 
 /// <summary>
 /// Backs the "Start ClipGuard with Windows" toggle via the per-user Run key.
-/// Per-user only — no elevation, no machine-wide state.
+/// Per-user only - no elevation, no machine-wide state.
 /// </summary>
 public static class StartupService
 {

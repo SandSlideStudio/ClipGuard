@@ -3,12 +3,12 @@
 ; Build the payload first:   ./build/publish.ps1
 ; Then compile this:         iscc build/ClipGuard.iss
 ;
-; Requires Inno Setup 6 (https://jrsoftware.org/isinfo.php) — it is not
+; Requires Inno Setup 6 (https://jrsoftware.org/isinfo.php) - it is not
 ; bundled with the repo. WiX or MSIX would work equally well; Inno is chosen
 ; here because it needs no toolchain beyond a single compiler.
 
 #define AppName        "ClipGuard"
-#define AppVersion     "1.4.2"
+#define AppVersion     "1.0.0"
 #define AppPublisher   "SandSlide Studio"
 #define AppUrl         "https://sandslide.studio"
 #define AppExe         "ClipGuard.exe"
@@ -64,7 +64,7 @@ Filename: "taskkill.exe"; Parameters: "/f /im {#AppExe}"; Flags: runhidden; RunO
 
 [UninstallDelete]
 ; Clipboard history and settings are the user's data, so removing them is
-; opt-in rather than automatic — see the CurUninstallStepChanged prompt below.
+; opt-in rather than automatic - see the CurUninstallStepChanged prompt below.
 Type: dirifempty; Name: "{localappdata}\ClipGuard"
 
 [Code]

@@ -25,7 +25,7 @@ public partial class AppRulesView : UserControl
 
         if (dialog.ShowDialog() != true) return;
 
-        // New rules default to Blocked — that's the reason to add one by hand.
+        // New rules default to Blocked - that's the reason to add one by hand.
         var processName = Path.GetFileName(dialog.FileName);
         if (!RuleConfirmation.ConfirmBlock(processName)) return;
 

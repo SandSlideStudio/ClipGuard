@@ -155,7 +155,7 @@
     </Setter>
   </Style>
 
-  <!-- ══ Pill toggle — 42x24, red when on, 18px knob, 150ms ═══════════════ -->
+  <!-- ══ Pill toggle - 42x24, red when on, 18px knob, 150ms ═══════════════ -->
   <Style x:Key="ToggleSwitch" TargetType="ToggleButton">
     <Setter Property="Width" Value="42" />
     <Setter Property="Height" Value="24" />
@@ -361,7 +361,7 @@
     </Setter>
   </Style>
 
-  <!-- ══ Scrollbar — slim, neutral, matches the soft tier ══════════════════ -->
+  <!-- ══ Scrollbar - slim, neutral, matches the soft tier ══════════════════ -->
   <Style x:Key="SlimScrollBar" TargetType="ScrollBar">
     <Setter Property="Width" Value="8" />
     <Setter Property="Background" Value="Transparent" />

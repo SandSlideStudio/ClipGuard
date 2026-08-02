@@ -70,7 +70,7 @@
         <!-- empty state: no events yet -->
         <Border Style="{StaticResource Panel}" Padding="16,14"
                 Visibility="{Binding HasEvents, Converter={StaticResource NotBoolVis}}">
-          <TextBlock Text="Nothing yet. ClipGuard is watching — copy something and go about your day."
+          <TextBlock Text="Nothing yet. ClipGuard is watching, so copy something and go about your day."
                      FontSize="12" Foreground="{StaticResource Neutral600}" TextWrapping="Wrap" />
         </Border>
 

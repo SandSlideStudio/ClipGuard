@@ -19,7 +19,7 @@
        layouts pin themselves to 380 and only the pill flexes. -->
   <Grid Margin="12">
 
-    <!-- ══ Small — allowed events, one line, auto-dismiss ═══════════════ -->
+    <!-- ══ Small - allowed events, one line, auto-dismiss ═══════════════ -->
     <!-- The mock drew this as a full stadium (radius 99). Kept the app's card
          radius instead so all three toasts, and the windows behind them, share
          one corner. At ~40px tall a 14px radius reads proportionally rounder
@@ -56,7 +56,7 @@
       </Grid>
     </Border>
 
-    <!-- ══ Medium — blocked write ═══════════════════════════════════════ -->
+    <!-- ══ Medium - blocked write ═══════════════════════════════════════ -->
     <Border x:Name="MediumCard" Visibility="Collapsed" Width="380"
             Background="{StaticResource Bg}" CornerRadius="14"
             BorderBrush="#1f000000" BorderThickness="1"
@@ -120,7 +120,7 @@
       </StackPanel>
     </Border>
 
-    <!-- ══ Large — high-risk swap, sticky ═══════════════════════════════ -->
+    <!-- ══ Large - high-risk swap, sticky ═══════════════════════════════ -->
     <Border x:Name="LargeCard" Visibility="Collapsed" Width="380"
             Background="{StaticResource Bg}" CornerRadius="14"
             BorderBrush="{StaticResource Accent}" BorderThickness="2"
@@ -179,7 +179,7 @@
                        TextTrimming="CharacterEllipsis" />
           </Grid>
 
-          <!-- "Keep my original" is already the state of the world — this just
+          <!-- "Keep my original" is already the state of the world - this just
                confirms it. The second button is the escape hatch for a false
                positive; without it a wrong call here is a dead end. -->
           <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
@@ -191,7 +191,7 @@
           </StackPanel>
 
           <!-- Blocking a whole application is a big hammer, so it's a quiet
-               third option — and hidden entirely for browsers, where it would
+               third option - and hidden entirely for browsers, where it would
                stop every copy you make. -->
           <Button x:Name="LargeBlockApp" Style="{StaticResource BtnGhost}"
                   HorizontalAlignment="Left" Padding="0,6" Margin="0,6,0,0"
@@ -200,7 +200,7 @@
       </StackPanel>
     </Border>
 
-    <!-- ══ Warning — dangerous content, or a terminal about to receive it ═══
+    <!-- ══ Warning - dangerous content, or a terminal about to receive it ═══
          Shares the high-risk card's language but shows the command itself
          rather than a before/after diff: nothing was replaced. Sticky.
     -->

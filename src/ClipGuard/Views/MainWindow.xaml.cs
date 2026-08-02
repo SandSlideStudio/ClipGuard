@@ -24,7 +24,7 @@ public partial class MainWindow : Window
     public bool AllowClose { get; set; }
 
     /// <summary>
-    /// Closing the window hides it — ClipGuard keeps standing guard from the
+    /// Closing the window hides it - ClipGuard keeps standing guard from the
     /// tray. Actual exit goes through the tray menu.
     /// </summary>
     private void OnClose(object sender, RoutedEventArgs e) => Hide();

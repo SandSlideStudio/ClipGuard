@@ -8,7 +8,7 @@ namespace ClipGuard.Services;
 /// leaves the machine, and a crash report that phoned home would be the one
 /// exception nobody agreed to. The setting is worded to match what this does.
 ///
-/// Clipboard content is never written here — only the exception itself.
+/// Clipboard content is never written here - only the exception itself.
 /// </summary>
 public static class CrashLog
 {

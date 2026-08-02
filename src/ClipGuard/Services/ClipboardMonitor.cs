@@ -71,7 +71,7 @@ public sealed class ClipboardMonitor : IDisposable
 
         handled = true;
 
-        // Capture these before any await/retry — the foreground window can move.
+        // Capture these before any await/retry - the foreground window can move.
         var owner = Win32.GetClipboardOwner();
         var foreground = Win32.GetForegroundWindow();
         var sequence = Win32.GetClipboardSequenceNumber();
@@ -92,7 +92,7 @@ public sealed class ClipboardMonitor : IDisposable
         _lastOwner = owner;
         _lastAt = now;
 
-        // Our own restore write echoes back — ignore it for as long as the echo
+        // Our own restore write echoes back - ignore it for as long as the echo
         // can plausibly last, not just once.
         if (_selfWriteContent is not null
             && string.Equals(text, _selfWriteContent, StringComparison.Ordinal)
@@ -113,7 +113,7 @@ public sealed class ClipboardMonitor : IDisposable
     }
 
     /// <summary>
-    /// The clipboard is a shared, lock-guarded resource — another process may
+    /// The clipboard is a shared, lock-guarded resource - another process may
     /// hold it open for a few milliseconds. Retry rather than drop the event.
     /// </summary>
     public static string? ReadClipboardText()
@@ -155,7 +155,7 @@ public sealed class ClipboardMonitor : IDisposable
             }
         }
 
-        // Never landed — clear the guard so the next real change isn't swallowed.
+        // Never landed - clear the guard so the next real change isn't swallowed.
         _selfWriteContent = null;
     }
 

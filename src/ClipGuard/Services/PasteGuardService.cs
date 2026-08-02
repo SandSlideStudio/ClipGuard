@@ -3,14 +3,14 @@ namespace ClipGuard.Services;
 /// <summary>
 /// Guards the moment that actually causes harm: a command going into a terminal.
 ///
-/// The ClickFix / fake-CAPTCHA attack never swaps anything — a page parks a
+/// The ClickFix / fake-CAPTCHA attack never swaps anything - a page parks a
 /// PowerShell one-liner on your clipboard and tells you to press Win+R, Ctrl+V,
 /// Enter. Swap detection is blind to it, so this watches for the *destination*
 /// instead: when a shell or the Run dialog takes focus while a command is on the
 /// clipboard, say something.
 ///
 /// Deliberately a foreground-window hook rather than a keyboard hook. It fires
-/// at the same moment — Win+R opening is what raises it — while observing no
+/// at the same moment - Win+R opening is what raises it - while observing no
 /// keystrokes at all. A clipboard security tool has no business keylogging.
 /// </summary>
 public sealed class PasteGuardService : IDisposable
@@ -62,7 +62,7 @@ public sealed class PasteGuardService : IDisposable
         var target = _resolver.Resolve(hwnd);
         if (!IsPasteTarget(target.Name, hwnd)) return;
 
-        // Read the clipboard live — the guard has to reflect what would actually
+        // Read the clipboard live - the guard has to reflect what would actually
         // be pasted, not what monitoring last recorded.
         var text = ClipboardMonitor.ReadClipboardText();
         if (string.IsNullOrWhiteSpace(text)) return;
@@ -91,7 +91,7 @@ public sealed class PasteGuardService : IDisposable
     }
 
     /// <summary>
-    /// Names the user recognises. Version-info descriptions are unhelpful here —
+    /// Names the user recognises. Version-info descriptions are unhelpful here -
     /// conhost.exe calls itself "Windows Terminal Host", which means nothing to
     /// someone being told not to paste something.
     /// </summary>

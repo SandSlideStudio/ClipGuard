@@ -57,7 +57,7 @@ public class ClipboardEventTests
     }
 
     [Theory]
-    [InlineData(ClipboardAction.Write, true, "wrote to clipboard — blocked")]
+    [InlineData(ClipboardAction.Write, true, "wrote to clipboard, blocked")]
     [InlineData(ClipboardAction.Write, false, "wrote to clipboard")]
     [InlineData(ClipboardAction.Read, false, "read clipboard")]
     public void Action_text_matches_the_verdict(ClipboardAction action, bool blocked, string expected)

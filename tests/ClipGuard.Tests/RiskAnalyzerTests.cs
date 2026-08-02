@@ -26,7 +26,7 @@ public class RiskAnalyzerTests
     [InlineData("https://github.com/SandSlideStudio/clipguard")]
     [InlineData("git clone https://github.com/SandSlideStudio/clipguard.git")]
     [InlineData("npm install clipguard")]
-    [InlineData("Q3 planning notes — draft v2")]
+    [InlineData("Q3 planning notes - draft v2")]
     [InlineData("")]
     [InlineData(null)]
     public void Leaves_ordinary_content_alone(string? content) =>

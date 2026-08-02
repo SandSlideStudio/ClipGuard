@@ -6,19 +6,19 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <!-- ban / slashed circle — blocked events -->
+  <!-- ban / slashed circle - blocked events -->
   <PathGeometry x:Key="IconBan"
                 Figures="M2,12 A10,10 0 1,0 22,12 A10,10 0 1,0 2,12 M4.9,4.9 L19.1,19.1" />
 
-  <!-- clipboard — allowed events -->
+  <!-- clipboard - allowed events -->
   <PathGeometry x:Key="IconClipboard"
                 Figures="M8,2 H16 V6 H8 Z M16,4 H18 A2,2 0 0 1 20,6 V20 A2,2 0 0 1 18,22 H6 A2,2 0 0 1 4,20 V6 A2,2 0 0 1 6,4 H8" />
 
-  <!-- magnifier — history search -->
+  <!-- magnifier - history search -->
   <PathGeometry x:Key="IconSearch"
                 Figures="M3,11 A8,8 0 1,0 19,11 A8,8 0 1,0 3,11 M21,21 L16.7,16.7" />
 
-  <!-- check — wizard acceptance -->
+  <!-- check - wizard acceptance -->
   <PathGeometry x:Key="IconCheck" Figures="M20,6 L9,17 L4,12" />
 
 </ResourceDictionary>

@@ -68,7 +68,7 @@ public class DetectionPolicyTests
     public void A_background_app_overwriting_a_fresh_copy_is_blocked_whatever_it_wrote()
     {
         // Speed plus a writer you aren't looking at is two signals, so the
-        // content doesn't need to look dangerous — replacing a URL with a
+        // content doesn't need to look dangerous - replacing a URL with a
         // different URL is still a swap.
         //
         // This is the rule most likely to catch something innocent: a clipboard
@@ -105,7 +105,7 @@ public class DetectionPolicyTests
     public void Address_swapped_for_another_address_in_the_focused_app_is_blocked()
     {
         // The core attack: a page rewrites the clipboard inside your browser,
-        // so there is no background signal to lean on — only the shape match.
+        // so there is no background signal to lean on - only the shape match.
         var outcome = DetectionPolicy.Evaluate(
             Input(AddressB, previous: AddressA, rapid: true, background: false));
 

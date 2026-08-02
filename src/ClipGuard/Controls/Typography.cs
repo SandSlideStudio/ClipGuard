@@ -73,7 +73,7 @@ public static class Typography
             {
                 block.Inlines.Add(new Run(text[i].ToString()));
 
-                // No trailing spacer — it would offset centred layouts.
+                // No trailing spacer - it would offset centred layouts.
                 if (i < text.Length - 1)
                     block.Inlines.Add(new Run(" ") { FontSize = spacerSize });
             }

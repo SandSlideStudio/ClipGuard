@@ -42,7 +42,7 @@ public sealed class TrayService : IDisposable
         _icon = new WinForms.NotifyIcon
         {
             Icon = _activeIcon,
-            Text = "ClipGuard — standing guard",
+            Text = "ClipGuard: standing guard",
             Visible = true,
             ContextMenuStrip = BuildMenu()
         };
@@ -88,7 +88,7 @@ public sealed class TrayService : IDisposable
     private void RefreshState()
     {
         _icon.Icon = _protection.IsPaused ? _pausedIcon : _activeIcon;
-        _icon.Text = $"ClipGuard — {_protection.StatusTitle.ToLowerInvariant()}";
+        _icon.Text = $"ClipGuard: {_protection.StatusTitle.ToLowerInvariant()}";
     }
 
     /// <summary>

@@ -14,7 +14,7 @@
     <AssemblyTitle>ClipGuard</AssemblyTitle>
     <Product>ClipGuard</Product>
     <Company>SandSlide Studio</Company>
-    <Version>1.4.2</Version>
+    <Version>1.0.0</Version>
     <RootNamespace>ClipGuard</RootNamespace>
     <!-- WFO0003 tells WinForms apps to move DPI config out of the manifest.
          This is a WPF app; the manifest is the right mechanism here. -->

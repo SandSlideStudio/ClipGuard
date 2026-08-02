@@ -19,7 +19,7 @@ public partial class SettingsView : UserControl
 
     /// <summary>
     /// The segmented control is a radio group, so its state is pushed in rather
-    /// than bound — binding three radios to one enum needs a converter per option.
+    /// than bound - binding three radios to one enum needs a converter per option.
     /// </summary>
     private void LoadSegmentedState()
     {
@@ -55,7 +55,7 @@ public partial class SettingsView : UserControl
 
         Vm.Protection.SaveSettings();
 
-        // Shortening retention should take effect now, not at the next event —
+        // Shortening retention should take effect now, not at the next event -
         // and the History tab's subtitle quotes this value.
         Vm.Protection.ApplyRetentionNow();
         Vm.RefreshTabCopy();

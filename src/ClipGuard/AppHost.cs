@@ -7,7 +7,7 @@ namespace ClipGuard;
 
 /// <summary>
 /// Startup wiring: first-run wizard, protection service, tray, notifications.
-/// The app has no main window in the usual sense — it lives in the tray, and
+/// The app has no main window in the usual sense - it lives in the tray, and
 /// closing the window only hides it.
 /// </summary>
 public sealed class AppHost : IDisposable
@@ -47,7 +47,7 @@ public sealed class AppHost : IDisposable
 
             if (!setup.Completed)
             {
-                // Bailed out of first-run setup — don't leave a tray icon behind.
+                // Bailed out of first-run setup - don't leave a tray icon behind.
                 Shutdown();
                 return;
             }
@@ -60,7 +60,7 @@ public sealed class AppHost : IDisposable
         _protection.Start();
         _pasteGuard.Start();
 
-        // The wizard's final button says "Open ClipGuard", so it opens ClipGuard —
+        // The wizard's final button says "Open ClipGuard", so it opens ClipGuard -
         // the launch-minimized preference applies to later launches, not this one.
         if (justFinishedSetup)
         {

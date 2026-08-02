@@ -5,7 +5,7 @@ namespace ClipGuard.Services;
 
 /// <summary>
 /// The Windows surface ClipGuard needs. Clipboard change notification is
-/// push-based via AddClipboardFormatListener — no polling.
+/// push-based via AddClipboardFormatListener - no polling.
 /// </summary>
 /// <remarks>
 /// Uses DllImport rather than LibraryImport: the source generator requires
