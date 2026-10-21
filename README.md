@@ -206,19 +206,45 @@ because as text they aren't different. Two signals outside the text do:
 
 ## Privacy
 
-State lives in `%LOCALAPPDATA%\ClipGuard\`. Nothing is transmitted anywhere,
-because there is no network path out of the app.
+State lives in `%LOCALAPPDATA%\ClipGuard\`, and your clipboard never leaves the
+machine. The only thing ClipGuard sends anywhere is the update check described
+below, which carries nothing about you.
 
 | File | Encrypted | Why |
 | --- | --- | --- |
 | `events.json` | **yes**, DPAPI (CurrentUser) | holds previews of copied content |
 | `rules.json`, `trusted-sources.json`, `settings.json` | no | no clipboard content |
 | `logs/crash-*.log` | no | exception text only, opt-in |
+| `updates.json` | no | when we last asked GitHub for releases, and which one we mentioned |
 
 Encrypting the event log isn't optional politeness. Unencrypted it would be a
 plaintext record of everything you ever copied, including passwords, tokens and
 recovery phrases, sitting at a predictable path. Settings → *Remember what was
 copied* turns preview storage off entirely, keeping verdicts without content.
+
+### The one request
+
+ClipGuard makes exactly one outbound request, and only this one: a plain `GET`
+for the public list of releases on GitHub, at most once a day. It exists because
+an unsigned security tool that cannot tell you it is out of date is a liability.
+The first detection fix published after a release otherwise reaches nobody who
+already downloaded the app.
+
+It carries no identifier. Not a machine ID, not an install ID, and not even the
+version you are running: GitHub requires a `User-Agent`, so it gets the bare
+string `ClipGuard` and nothing more, which means the request cannot be used to
+count installs per build either. GitHub learns that some copy of ClipGuard
+asked, and that is all.
+
+Nothing is ever downloaded or installed automatically. A newer release puts a
+banner in the window and an item in the tray menu, and both open the release page
+in your browser, where the checksum and the provenance attestation are waiting to
+be checked. Fetching an executable over the network and running it would be a
+far larger attack surface than the stale-build problem it solves, and a
+particularly poor trade for a binary that isn't signed.
+
+Turn *Check GitHub for new releases* off in Settings and no request is made at
+all. The button in About still works for the times you want to ask.
 
 **Failure is visible.** If the clipboard listener fails to attach, or the app
 faults, the status chip reads "Not protecting" with a hollow dot, distinct from
@@ -229,7 +255,7 @@ while claiming to stand guard is worse than software that isn't installed.
 
 ```bash
 dotnet build ClipGuard.slnx     # build
-dotnet test                     # 105 tests
+dotnet test                     # 184 tests
 ./build/publish.ps1             # tests, then a self-contained win-x64 exe
 iscc build/ClipGuard.iss        # installer (needs Inno Setup 6)
 ```
@@ -301,10 +327,12 @@ git tag v1.0.0 && git push origin v1.0.0
 ## Not built yet
 
 - **Enterprise tier**, meaning a managed dashboard, policy-locked settings and enrolment
-- **Update mechanism.** *Check for updates* is a placeholder
+- **Automatic installation.** ClipGuard tells you a release exists; downloading
+  and replacing the exe is yours to do, on purpose
 - **Multi-monitor.** Toasts use the primary display
 - **Accessibility.** Custom control templates need `AutomationProperties`
-- **Localisation.** English only
+- **Localisation.** English only, including the fake-verification patterns,
+  which ClickFix campaigns do run in other languages
 
 ## Licence
 

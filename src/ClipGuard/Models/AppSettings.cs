@@ -23,6 +23,14 @@ public sealed class AppSettings
     public bool ShowNotifications { get; set; } = true;
     public bool CrashReports { get; set; }
 
+    /// <summary>
+    /// Ask GitHub once a day whether a newer release exists. On by default: an
+    /// unsigned tool that cannot tell you it is out of date is worse than one
+    /// that makes a single public request. Nothing about you is sent, and
+    /// nothing is ever downloaded or installed automatically.
+    /// </summary>
+    public bool CheckForUpdates { get; set; } = true;
+
     /// <summary>Warn when dangerous content lands on the clipboard, swap or not.</summary>
     public bool WarnRiskyContent { get; set; } = true;
 

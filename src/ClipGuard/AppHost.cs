@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Threading;
 using ClipGuard.Services;
 using ClipGuard.ViewModels;
 using ClipGuard.Views;
@@ -16,15 +17,21 @@ public sealed class AppHost : IDisposable
     private readonly NotificationService _notifications;
     private readonly PasteGuardService _pasteGuard;
     private readonly TrayService _tray;
+    private readonly UpdateService _updates;
     private readonly MainViewModel _vm;
+
+    /// <summary>Test mode means a volatile install location; it reaches no network.</summary>
+    private readonly bool _testMode;
 
     private MainWindow? _main;
     private TrayFlyoutWindow? _flyout;
 
     public AppHost(bool testMode = false)
     {
+        _testMode = testMode;
         _protection = new ProtectionService { IsTestMode = testMode };
-        _vm = new MainViewModel(_protection);
+        _updates = new UpdateService();
+        _vm = new MainViewModel(_protection, _updates);
         _notifications = new NotificationService(_protection);
         _pasteGuard = new PasteGuardService(_protection);
         _tray = new TrayService(_protection);
@@ -34,6 +41,11 @@ public sealed class AppHost : IDisposable
         _tray.OpenRequested += (_, _) => ShowMain();
         _tray.FlyoutRequested += (_, _) => ToggleFlyout();
         _tray.ExitRequested += (_, _) => Shutdown();
+        _tray.UpdateRequested += (_, _) => OpenReleasePage();
+
+        // Once per release rather than once per launch: the service remembers
+        // what it has already announced.
+        _updates.UpdateFirstSeen += (_, update) => _tray.ShowUpdateAvailable(update);
     }
 
     public void Start(string[] args)
@@ -59,6 +71,7 @@ public sealed class AppHost : IDisposable
 
         _protection.Start();
         _pasteGuard.Start();
+        StartUpdateCheck();
 
         // The wizard's final button says "Open ClipGuard", so it opens ClipGuard -
         // the launch-minimized preference applies to later launches, not this one.
@@ -72,6 +85,54 @@ public sealed class AppHost : IDisposable
                              || _protection.Settings.LaunchMinimized;
 
         if (!startMinimized) ShowMain();
+    }
+
+    /// <summary>
+    /// Asks GitHub about newer releases, a few seconds after startup so
+    /// protection is running first and the setup and relocation flows are not
+    /// racing a network call. Nothing happens here in test mode, and nothing
+    /// happens at all if the user turned it off.
+    /// </summary>
+    private void StartUpdateCheck()
+    {
+        if (_testMode) return;
+
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(8) };
+
+        timer.Tick += async (_, _) =>
+        {
+            timer.Stop();
+
+            try
+            {
+                await _updates.CheckAsync(_protection.Settings.CheckForUpdates);
+            }
+            catch
+            {
+                // CheckAsync swallows the expected failures itself. Anything
+                // left is still not worth taking the tray app down for.
+            }
+        };
+
+        timer.Start();
+    }
+
+    /// <summary>Opens the release page. ClipGuard never downloads an update itself.</summary>
+    private void OpenReleasePage()
+    {
+        var url = _updates.Available?.PageUrl ?? UpdateService.ReleasesPage;
+
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url)
+            {
+                UseShellExecute = true
+            });
+        }
+        catch
+        {
+            // No default browser, or the shell refused.
+        }
     }
 
     /// <summary>Settings, for the crash handler's opt-in check.</summary>

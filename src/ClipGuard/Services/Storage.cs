@@ -9,7 +9,9 @@ namespace ClipGuard.Services;
 /// <summary>
 /// Small JSON-file store under %LOCALAPPDATA%\ClipGuard. Everything ClipGuard
 /// keeps stays on this machine - that promise is load-bearing for the product,
-/// so there is deliberately no network path out of here.
+/// so nothing stored here is ever read out over a network. The one request
+/// ClipGuard makes lives in UpdateService, asks GitHub for its own release
+/// list, and touches none of this.
 ///
 /// Files holding clipboard content are encrypted at rest with DPAPI. Without
 /// that, the event log is a plaintext record of everything the user ever copied

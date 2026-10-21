@@ -157,9 +157,9 @@
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
           <StackPanel Grid.Column="0" Margin="0,0,20,0">
-            <!-- The mock said "Send anonymous crash reports". Nothing is sent
-                 anywhere - that would be the one exception to "stays on this
-                 machine" - so the label says what it actually does. -->
+            <!-- The mock said "Send anonymous crash reports". Nothing about a
+                 crash leaves the machine, so the label says what it actually
+                 does. The update check below is the only request we make. -->
             <TextBlock Text="Save crash reports to disk" FontWeight="SemiBold" FontSize="13" />
             <TextBlock Text="Writes fault details to a local log folder. Never includes clipboard content"
                        FontSize="11.5" Margin="0,2,0,0" Foreground="{StaticResource Neutral600}"
@@ -168,6 +168,27 @@
           <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitch}"
                         VerticalAlignment="Center"
                         IsChecked="{Binding Protection.Settings.CrashReports, Mode=TwoWay}"
+                        Click="OnSettingChanged" />
+        </Grid>
+      </Border>
+
+      <Border Style="{StaticResource ToggleRow}">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Grid.Column="0" Margin="0,0,20,0">
+            <!-- The one request ClipGuard makes, so the label says exactly what
+                 it is rather than hiding behind "check for updates". -->
+            <TextBlock Text="Check GitHub for new releases" FontWeight="SemiBold" FontSize="13" />
+            <TextBlock Text="Once a day, asks for the public list of releases. Sends no identifier and downloads nothing on its own"
+                       FontSize="11.5" Margin="0,2,0,0" Foreground="{StaticResource Neutral600}"
+                       TextWrapping="Wrap" />
+          </StackPanel>
+          <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitch}"
+                        VerticalAlignment="Center"
+                        IsChecked="{Binding Protection.Settings.CheckForUpdates, Mode=TwoWay}"
                         Click="OnSettingChanged" />
         </Grid>
       </Border>

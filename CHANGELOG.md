@@ -6,7 +6,29 @@ Notable changes to ClipGuard. Format loosely follows
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- **Update check.** ClipGuard asks GitHub once a day whether a newer release
+  exists, and says so with a banner in the window and an item in the tray menu.
+  Nothing is downloaded or installed automatically: both open the release page,
+  where the checksum and the provenance attestation can be checked. The request
+  carries no identifier, not even the version in the `User-Agent`, and turning
+  *Check GitHub for new releases* off in Settings stops it being made at all.
+  This is the only outbound request in the app.
+
+  A build on a release candidate is offered newer candidates and the final
+  release. A build on a final release is only ever offered final releases, so a
+  stable install is never nudged onto an untried one.
+
+### Fixed
+
+- **Documents that quote a command are no longer treated as attacks.** Copying a
+  project README containing a single `curl ... | sh` install line was reported as
+  a fake-CAPTCHA attack, and with defusing on, pages of the user's own text were
+  taken off the clipboard and replaced with the inert stand-in. Detection now
+  asks whether the content *is* a command as well as whether it contains one. A
+  fake verification note still overrides that, so padding a payload with prose
+  does not get it through.
 
 ## [1.0.0]
 

@@ -9,6 +9,8 @@ using WpfMedia = System.Windows.Media;
 // aliases can't be shadowed per-file, so GDI+ gets its own names here.
 using GdiColor = System.Drawing.Color;
 using GdiBrush = System.Drawing.Brush;
+using GdiFont = System.Drawing.Font;
+using GdiFontStyle = System.Drawing.FontStyle;
 
 namespace ClipGuard.Services;
 
@@ -25,12 +27,16 @@ public sealed class TrayService : IDisposable
     private readonly WinForms.NotifyIcon _icon;
     private readonly ProtectionService _protection;
 
+    private WinForms.ToolStripMenuItem? _updateItem;
     private Icon? _activeIcon;
     private Icon? _pausedIcon;
 
     public event EventHandler? OpenRequested;
     public event EventHandler? FlyoutRequested;
     public event EventHandler? ExitRequested;
+
+    /// <summary>The user wants the release page. Raised from the balloon or the menu.</summary>
+    public event EventHandler? UpdateRequested;
 
     public TrayService(ProtectionService protection)
     {
@@ -54,6 +60,11 @@ public sealed class TrayService : IDisposable
         };
         _icon.DoubleClick += (_, _) => OpenRequested?.Invoke(this, EventArgs.Empty);
 
+        // The balloon is the only notification ClipGuard raises that is not
+        // about the clipboard, so it goes through the tray rather than the
+        // toast system, which is built around a ClipboardEvent.
+        _icon.BalloonTipClicked += (_, _) => UpdateRequested?.Invoke(this, EventArgs.Empty);
+
         _protection.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName is nameof(ProtectionService.IsPaused) or nameof(ProtectionService.StatusTitle))
@@ -64,6 +75,15 @@ public sealed class TrayService : IDisposable
     private WinForms.ContextMenuStrip BuildMenu()
     {
         var menu = new WinForms.ContextMenuStrip();
+
+        // Hidden until a check finds something. Built up front so the menu is
+        // never rebuilt while the user has it open.
+        _updateItem = new WinForms.ToolStripMenuItem("Update available")
+        {
+            Available = false,
+            Font = new GdiFont(menu.Font, GdiFontStyle.Bold)
+        };
+        _updateItem.Click += (_, _) => UpdateRequested?.Invoke(this, EventArgs.Empty);
 
         var open = new WinForms.ToolStripMenuItem("Open ClipGuard");
         open.Click += (_, _) => OpenRequested?.Invoke(this, EventArgs.Empty);
@@ -77,12 +97,32 @@ public sealed class TrayService : IDisposable
         var exit = new WinForms.ToolStripMenuItem("Exit");
         exit.Click += (_, _) => ExitRequested?.Invoke(this, EventArgs.Empty);
 
-        menu.Items.AddRange([open, pause, clear, new WinForms.ToolStripSeparator(), exit]);
+        menu.Items.AddRange([_updateItem, open, pause, clear, new WinForms.ToolStripSeparator(), exit]);
 
         // Refresh the pause label each time the menu opens.
         menu.Opening += (_, _) => pause.Text = _protection.PauseCta;
 
         return menu;
+    }
+
+    /// <summary>
+    /// Says so in the tray, which is the whole point: someone who downloaded
+    /// ClipGuard and left it running has no other way to learn that a detection
+    /// fix shipped. The balloon is fired once per release by
+    /// <see cref="UpdateService"/>; the menu item stays until they update.
+    /// </summary>
+    public void ShowUpdateAvailable(AvailableUpdate update)
+    {
+        if (_updateItem is not null)
+        {
+            _updateItem.Text = $"Update to {update.Version}";
+            _updateItem.Available = true;
+        }
+
+        _icon.BalloonTipIcon = WinForms.ToolTipIcon.Info;
+        _icon.BalloonTipTitle = $"ClipGuard {update.Version} is available";
+        _icon.BalloonTipText = "Click to open the release page. Nothing downloads on its own.";
+        _icon.ShowBalloonTip(10_000);
     }
 
     private void RefreshState()

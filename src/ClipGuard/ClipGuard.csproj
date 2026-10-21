@@ -15,6 +15,12 @@
     <Product>ClipGuard</Product>
     <Company>SandSlide Studio</Company>
     <Version>1.0.0</Version>
+    <!-- The assembly version cannot carry a pre-release suffix, so the full
+         version is stated separately. UpdateService reads this one: without the
+         suffix a release candidate believes it is the final 1.0.0 and never
+         offers the upgrade. The release workflow checks both against the tag so
+         the two cannot drift. -->
+    <InformationalVersion>1.0.0-rc.1</InformationalVersion>
     <RootNamespace>ClipGuard</RootNamespace>
     <!-- WFO0003 tells WinForms apps to move DPI config out of the manifest.
          This is a WPF app; the manifest is the right mechanism here. -->

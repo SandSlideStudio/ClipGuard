@@ -15,6 +15,25 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
+    /// <summary>
+    /// The banner's button. Opens the release page in a browser; ClipGuard
+    /// never fetches or runs an update itself.
+    /// </summary>
+    private void OnOpenReleases(object sender, RoutedEventArgs e)
+    {
+        var url = _vm.Updates.Available?.PageUrl ?? Services.UpdateService.ReleasesPage;
+
+        try
+        {
+            System.Diagnostics.Process.Start(
+                new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch
+        {
+            // No default browser, or the shell refused.
+        }
+    }
+
     private void OnMinimize(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
     private void OnMaximize(object sender, RoutedEventArgs e) =>

@@ -56,6 +56,18 @@ jobs:
             throw "Tag $tag expects version $expected but the project says $actual."
           }
 
+          # The informational version carries the full version, suffix included,
+          # and is what the running app compares against the published releases.
+          # If it drifted from the tag, a release candidate would believe it was
+          # the final build and would never offer the upgrade.
+          $full = $tag.TrimStart('v')
+          $informational = [regex]::Match(
+            $csproj, '<InformationalVersion>([^<]+)</InformationalVersion>').Groups[1].Value
+
+          if ($informational -ne $full) {
+            throw "Tag $tag expects InformationalVersion $full but the project says '$informational'."
+          }
+
           "prerelease=$($prerelease.ToString().ToLower())" >> $env:GITHUB_OUTPUT
           Write-Host "Version $actual matches tag $tag (prerelease: $prerelease)"
 

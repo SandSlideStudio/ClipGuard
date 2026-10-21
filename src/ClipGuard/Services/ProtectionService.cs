@@ -134,7 +134,10 @@ public sealed class ProtectionService : INotifyPropertyChanged, IDisposable
     /// <summary>Second line of the status chip. Names test mode, since it changes what happens tomorrow.</summary>
     public string StatusDetail => IsTestMode
         ? "Test mode · won't start with Windows"
-        : $"v{typeof(ProtectionService).Assembly.GetName().Version?.ToString(3) ?? "1.0.0"} · SandSlide";
+        // UpdateService.Current, not the assembly version: that one cannot
+        // carry a pre-release suffix, so a candidate build sat here calling
+        // itself v1.0.0 while the update check knew better.
+        : $"v{UpdateService.Current} · SandSlide";
 
     public string StatusSub => !IsHealthy
         ? "ClipGuard couldn't attach to the clipboard. Restart it: you are not protected."

@@ -18,9 +18,10 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private int _selectedTabIndex;
     private string _searchText = string.Empty;
 
-    public MainViewModel(ProtectionService protection)
+    public MainViewModel(ProtectionService protection, UpdateService updates)
     {
         Protection = protection;
+        Updates = updates;
         FilteredEvents = new ObservableCollection<ClipboardEvent>(protection.Events);
 
         protection.Events.CollectionChanged += (_, _) => ApplyFilter();
@@ -29,6 +30,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
     }
 
     public ProtectionService Protection { get; }
+
+    /// <summary>Bound by the update banner and the About tab.</summary>
+    public UpdateService Updates { get; }
 
     /// <summary>
     /// Rebuilt rather than fixed, because the History subtitle quotes the
