@@ -214,6 +214,70 @@ public static partial class RiskAnalyzer
                               || (alsoTrusted?.Contains(h, StringComparer.OrdinalIgnoreCase) ?? false));
     }
 
+
+    // ── Command, or document that quotes one ──────────────────────────────
+    //
+    // Every pattern above answers "does this text contain a dangerous
+    // command". That is the wrong question on its own. A README, a chat log or
+    // a page of install instructions all contain command lines, and treating
+    // one as a payload is this app's most damaging false positive: it accuses
+    // the user of being attacked while they copy their own writing, and
+    // defusing replaces pages of their text with a one-line stand-in.
+    //
+    // The shape is the discriminator. A ClickFix payload has to be something a
+    // victim can paste and run in one go, and the Run dialog takes a single
+    // line, so the attack is essentially single-line by construction. Prose
+    // wrapped around a payload is not a workable attack: Win+R would take only
+    // the first line, and in a terminal every prose line would error on screen,
+    // which is the "your paste failed" tell the whole design avoids.
+
+    /// <summary>
+    /// Above this many non-blank lines the content is a document, whatever it
+    /// quotes. Generous enough for a payload that carries a couple of lines of
+    /// fake verification text.
+    /// </summary>
+    private const int MaxCommandLines = 6;
+
+    /// <summary>
+    /// How much of the content the command lines must account for. A payload is
+    /// mostly command; a document mentioning one is mostly not.
+    /// </summary>
+    private const double MinCommandShare = 0.5;
+
+    /// <summary>
+    /// True when the text <em>is</em> a command rather than a document that
+    /// happens to contain one.
+    ///
+    /// Deliberately separate from <see cref="IsShellCommand"/>: the patterns
+    /// answer what the text contains, this answers whether the text is a
+    /// payload. Both are needed, and conflating them is what caused ClipGuard
+    /// to flag a project README as a fake-CAPTCHA attack.
+    /// </summary>
+    public static bool IsCommandShaped(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return false;
+
+        var lines = text.ReplaceLineEndings("\n")
+                        .Split('\n')
+                        .Select(l => l.Trim())
+                        .Where(l => l.Length > 0)
+                        .ToList();
+
+        if (lines.Count is 0 or > MaxCommandLines) return false;
+
+        var total = lines.Sum(l => l.Length);
+        if (total == 0) return false;
+
+        var commandChars = lines.Where(IsShellCommand).Sum(l => l.Length);
+
+        // A command split across lines matches as a whole but on no single
+        // line. Within the line cap, accept it rather than measuring a share
+        // of zero.
+        if (commandChars == 0) return IsShellCommand(text);
+
+        return commandChars >= total * MinCommandShare;
+    }
+
     public static RiskKind Classify(string? content)
     {
         if (string.IsNullOrWhiteSpace(content)) return RiskKind.None;

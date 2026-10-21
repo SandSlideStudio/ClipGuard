@@ -153,7 +153,15 @@ public static class DetectionPolicy
 
         return RiskAnalyzer.Classify(text) switch
         {
-            RiskKind.ShellCommand => true,
+            // A command only warrants a warning when the content *is* that
+            // command. A README or a page of install notes quotes commands
+            // without being one, and warning there would both cry wolf and,
+            // with defusing on, take the document off the clipboard.
+            //
+            // A fake verification note overrides the shape test: nothing
+            // legitimate arrives wearing a reCAPTCHA label, however padded.
+            RiskKind.ShellCommand => RiskAnalyzer.IsVerificationLure(text)
+                                     || RiskAnalyzer.IsCommandShaped(text),
             RiskKind.CryptoAddress => IsBrowser(writerName),
             _ => false
         };
